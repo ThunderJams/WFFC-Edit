@@ -30,6 +30,7 @@ public:
 	// Basic game loop
 	void Tick(InputCommands * Input);
 	void Render();
+	int	 MousePicking();
 
 	// Rendering helpers
 	void Clear();
@@ -126,7 +127,7 @@ private:
     DirectX::SimpleMath::Matrix                                             m_view;
     DirectX::SimpleMath::Matrix                                             m_projection;
 
-
+	RECT		m_ScreenDimensions;
 };
 
 std::wstring StringToWCHART(std::string s);
