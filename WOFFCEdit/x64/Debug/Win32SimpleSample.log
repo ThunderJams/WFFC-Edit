@@ -1,4 +1,25 @@
-﻿  ToolMain.cpp
+﻿  Game.cpp
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(28,20): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(160,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(161,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(232,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(232,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(233,81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(233,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(248,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(247,147): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(247,98): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(254,111): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(254,85): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(256,109): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(256,83): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(312,45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(322,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(321,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(320,97): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(306,10): warning C4101: 'Buffer': unreferenced local variable
+C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\Game.cpp(458,37): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  ToolMain.cpp
   _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
 C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\ToolMain.cpp(91,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\ToolMain.cpp(92,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
@@ -28,4 +49,5 @@ C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\ToolMain.cpp(141,56
 C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\ToolMain.cpp(142,54): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\ToolMain.cpp(143,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\ToolMain.cpp(203,38): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
   Win32SimpleSample.vcxproj -> C:\Users\callu\OneDrive\Documents\Github\WFFC-Edit\WOFFCEdit\x64\Debug\WoFEdit.exe

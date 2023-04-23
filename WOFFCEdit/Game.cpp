@@ -232,6 +232,10 @@ int Game::MousePicking()
 	const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
 	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
 
+	// initialise as float max
+
+	float minDistance = FLT_MAX;
+
 	//Loop through entire display list of objects and pick with each in turn. 
 	for (int i = 0; i < m_displayList.size(); i++)
 	{
@@ -261,7 +265,12 @@ int Game::MousePicking()
 			//checking for ray intersection
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
-				selectedID = i;
+				if (pickedDistance < minDistance)
+				{
+					minDistance = pickedDistance;
+					selectedID = i;
+				}
+				//selectedID = i;
 			}
 		}
 	}
