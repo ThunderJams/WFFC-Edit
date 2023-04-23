@@ -282,12 +282,6 @@ void ToolMain::Tick(MSG *msg)
 	//do we have a selection
 	//do we have a mode
 	//are we clicking / dragging /releasing
-	if (m_toolInputCommands.mouse_LB_Down)
-	{
-		m_selectedObject = m_d3dRenderer.MousePicking();
-		m_toolInputCommands.mouse_LB_Down = false;
-	}
-
 	//has something changed
 		//update Scenegraph
 		//add to scenegraph
@@ -312,16 +306,11 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 	case WM_MOUSEMOVE:
-		//update the mouse X and Y which will be sent thru to the Renderer.
-		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
-		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
 		break;
 
-	case WM_LBUTTONDOWN:
-		//mouse left pressed.	
-		m_toolInputCommands.mouse_LB_Down = true;
+	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
+		//set some flag for the mouse button in inputcommands
 		break;
-
 
 	}
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
