@@ -284,8 +284,9 @@ void ToolMain::Tick(MSG *msg)
 	//are we clicking / dragging /releasing
 	 if (m_toolInputCommands.mouse_LB_Down)
 	{
+		 m_toolInputCommands.mouse_LB_Down = false;
 		m_selectedObject = m_d3dRenderer.MousePicking();
-		m_toolInputCommands.mouse_LB_Down = false;
+		
 	}
 	//has something changed
 		//update Scenegraph
@@ -314,6 +315,7 @@ void ToolMain::UpdateInput(MSG * msg)
 		//update the mouse X and Y which will be sent thru to the Renderer.
 		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
 		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
+		break;
 
 	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
