@@ -299,6 +299,7 @@ void ToolMain::Tick(MSG *msg)
 
 void ToolMain::UpdateInput(MSG * msg)
 {
+	
 
 	switch (msg->message)
 	{
@@ -321,6 +322,18 @@ void ToolMain::UpdateInput(MSG * msg)
 		//set some flag for the mouse button in inputcommands
 		//mouse left pressed.	
 		m_toolInputCommands.mouse_LB_Down = true;
+		break;
+
+	case WM_RBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
+		//set some flag for the mouse button in inputcommands
+		//mouse left pressed.	
+		m_toolInputCommands.mouse_RB_Down = true;
+		break;
+
+	case WM_RBUTTONUP:	//mouse button down,  you will probably need to check when its up too
+		//set some flag for the mouse button in inputcommands
+		//mouse left pressed.	
+		m_toolInputCommands.mouse_RB_Down = false;
 		break;
 
 	}
