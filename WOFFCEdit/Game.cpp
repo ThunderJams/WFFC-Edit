@@ -227,6 +227,22 @@ void Game::Paste()
 
     // push the copied object back to the display list
     m_displayList.push_back(copiedObject);
+
+    erasing = false;
+}
+
+void Game::Delete(int id) {
+    if (erasing == false) {
+        m_displayList.erase(m_displayList.begin() + id);
+        erasing = true;
+    }
+
+    
+}
+
+void Game::Cut(int id) {
+    Copy(id);
+    Delete(id);
 }
 
 #pragma region Frame Render

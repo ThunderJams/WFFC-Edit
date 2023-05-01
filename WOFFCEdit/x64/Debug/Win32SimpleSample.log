@@ -1,10 +1,4 @@
-﻿  Camera.cpp
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(10,20): warning C4305: '=': truncation from 'double' to 'float'
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(53,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(54,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(70,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(71,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  DisplayChunk.cpp
+﻿  DisplayChunk.cpp
 D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\DisplayChunk.cpp(14,50): warning C4305: '=': truncation from 'double' to 'float'
 D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\DisplayChunk.cpp(15,49): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\DisplayChunk.cpp(73,39): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
@@ -29,12 +23,12 @@ D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(186,111): warning C4244: 'a
 D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(186,85): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
 D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(188,109): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
 D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(188,83): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(262,45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(272,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(271,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(270,97): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(256,10): warning C4101: 'Buffer': unreferenced local variable
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(408,37): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(278,45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(288,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(287,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(286,97): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(272,10): warning C4101: 'Buffer': unreferenced local variable
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Game.cpp(424,37): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   MFCFrame.cpp
   _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
   MFCMain.cpp

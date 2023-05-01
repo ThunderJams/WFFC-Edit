@@ -292,6 +292,9 @@ void ToolMain::Tick(MSG *msg)
 	 if (m_toolInputCommands.key_c && m_toolInputCommands.control) {
 		 m_d3dRenderer.Copy(m_selectedObject);
 	 }
+	 else if (m_toolInputCommands.key_x && m_toolInputCommands.control) {
+		 m_d3dRenderer.Cut(m_selectedObject);
+	 }
 
 	 if (m_toolInputCommands.key_v && m_toolInputCommands.control) {
 		 m_d3dRenderer.Paste();
@@ -403,5 +406,13 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else {
 		m_toolInputCommands.key_v = false;
+	}
+	if (m_keyArray['X']) {
+		m_toolInputCommands.key_x = true;
+	}
+	else {
+		m_toolInputCommands.key_x = false;
+		// set erasing to false
+		m_d3dRenderer.StopErasing();
 	}
 }

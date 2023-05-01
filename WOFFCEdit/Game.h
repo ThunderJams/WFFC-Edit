@@ -32,8 +32,11 @@ public:
 	void Tick(InputCommands * Input);
 	void Render();
 	int	 MousePicking();
-	void Copy(int SelectedObjectID);
+	void Copy(int id);
 	void Paste();
+	void Delete(int id);
+	void Cut(int id);
+	void StopErasing() { erasing = false; }
 
 	// Rendering helpers
 	void Clear();
@@ -77,6 +80,7 @@ private:
 	Camera camera;
 
 	DisplayObject copiedObject;
+	bool erasing = false;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

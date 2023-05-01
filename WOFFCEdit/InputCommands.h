@@ -15,5 +15,6 @@ struct InputCommands
 
 	bool key_c;
 	bool key_v;
+	bool key_x;
 	bool control;
 };
