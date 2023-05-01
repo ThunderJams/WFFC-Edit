@@ -222,7 +222,7 @@ void Game::Copy(int id)
 void Game::Paste()
 {
     // set the transform of the object to the camera position
-    copiedObject.m_position = camera.m_camPosition;
+    copiedObject.m_position = camera.m_camPosition + (camera.m_camLookDirection * 3);
     
 
     // push the copied object back to the display list
