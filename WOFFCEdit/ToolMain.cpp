@@ -288,6 +288,16 @@ void ToolMain::Tick(MSG *msg)
 		m_selectedObject = m_d3dRenderer.MousePicking();
 		
 	}
+
+	 if (m_toolInputCommands.key_c && m_toolInputCommands.control) {
+		 m_d3dRenderer.Copy(m_selectedObject);
+	 }
+
+	 if (m_toolInputCommands.key_v && m_toolInputCommands.control) {
+		 m_d3dRenderer.Paste();
+	 }
+
+
 	//has something changed
 		//update Scenegraph
 		//add to scenegraph
@@ -323,6 +333,8 @@ void ToolMain::UpdateInput(MSG * msg)
 		//mouse left pressed.	
 		m_toolInputCommands.mouse_LB_Down = true;
 		break;
+
+		
 
 	case WM_RBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
@@ -373,5 +385,23 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else m_toolInputCommands.rotLeft = false;
 
-	//WASD
+	// copy paste
+	if (m_keyArray[17]) {
+		m_toolInputCommands.control = true;
+	}
+	else {
+		m_toolInputCommands.control = false;
+	}
+	if (m_keyArray['C']) {
+		m_toolInputCommands.key_c = true;
+	}
+	else {
+		m_toolInputCommands.key_c = false;
+	}
+	if (m_keyArray['V']) {
+		m_toolInputCommands.key_v = true;
+	}
+	else {
+		m_toolInputCommands.key_v = false;
+	}
 }

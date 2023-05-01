@@ -32,6 +32,8 @@ public:
 	void Tick(InputCommands * Input);
 	void Render();
 	int	 MousePicking();
+	void Copy(int SelectedObjectID);
+	void Paste();
 
 	// Rendering helpers
 	void Clear();
@@ -71,7 +73,10 @@ private:
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
 
+	// reference to the camera
 	Camera camera;
+
+	DisplayObject copiedObject;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

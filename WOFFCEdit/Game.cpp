@@ -211,6 +211,24 @@ int Game::MousePicking()
 	return selectedID;
 }
 
+void Game::Copy(int id)
+{
+    if (id == -1)
+        return;
+    //copy
+    copiedObject = m_displayList[id];
+}
+
+void Game::Paste()
+{
+    // set the transform of the object to the camera position
+    copiedObject.m_position = camera.m_camPosition;
+    
+
+    // push the copied object back to the display list
+    m_displayList.push_back(copiedObject);
+}
+
 #pragma region Frame Render
 // Draws the scene.
 void Game::Render()
