@@ -245,6 +245,13 @@ void Game::Cut(int id) {
     Delete(id);
 }
 
+void Game::MoveObject(int moveX, int moveY, int id)
+{
+    m_displayList[id].m_position = Vector3(m_displayList[id].m_position.x + moveX, m_displayList[id].m_position.y + moveY, m_displayList[id].m_position.z);
+}
+
+
+
 #pragma region Frame Render
 // Draws the scene.
 void Game::Render()

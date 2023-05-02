@@ -36,7 +36,8 @@ public:
 	void Paste();
 	void Delete(int id);
 	void Cut(int id);
-	void StopErasing() { erasing = false; }
+	void StopErasing() { erasing = false;}
+	void MoveObject(int moveX, int moveY, int id);
 
 	// Rendering helpers
 	void Clear();

@@ -279,14 +279,38 @@ void ToolMain::onActionSaveTerrain()
 
 void ToolMain::Tick(MSG *msg)
 {
+
 	//do we have a selection
 	//do we have a mode
 	//are we clicking / dragging /releasing
-	 if (m_toolInputCommands.mouse_LB_Down)
-	{
-		 m_toolInputCommands.mouse_LB_Down = false;
-		m_selectedObject = m_d3dRenderer.MousePicking();
-		
+	if (m_toolInputCommands.mouse_LB_Down || m_toolInputCommands.mouse_LB_Hold) {
+		// check if the object we are clicking on is the same as what is selected
+		if (m_selectedObject == m_d3dRenderer.MousePicking() || m_toolInputCommands.mouse_LB_Hold) {
+			// calculate the difference in the mouse position transforms
+			int moveX = 0;
+			int moveY = 0;
+			if ((m_toolInputCommands.mouse_X - prevX) > 0) {
+				moveX = 1;
+			}
+			else if ((m_toolInputCommands.mouse_X - prevX) < 0) {
+				moveX = -1;
+			}
+
+			if ((m_toolInputCommands.mouse_Y - prevY) < 0) {
+				moveY = 1;
+			}
+			else if ((m_toolInputCommands.mouse_Y - prevY) > 0) {
+				moveY = -1;
+			}
+			m_d3dRenderer.MoveObject(moveX, moveY, m_selectedObject);
+			m_toolInputCommands.mouse_LB_Down = false;
+			m_toolInputCommands.mouse_LB_Hold = true;
+		}
+		// otherwise, set the mouse to click on the new object
+		else {
+			m_toolInputCommands.mouse_LB_Down = false;
+			m_selectedObject = m_d3dRenderer.MousePicking();
+		}
 	}
 
 	 if (m_toolInputCommands.key_c && m_toolInputCommands.control) {
@@ -308,6 +332,9 @@ void ToolMain::Tick(MSG *msg)
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
+
+	prevX = m_toolInputCommands.mouse_X;
+	prevY = m_toolInputCommands.mouse_Y;
 }
 
 void ToolMain::UpdateInput(MSG * msg)
@@ -337,6 +364,10 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.mouse_LB_Down = true;
 		break;
 
+	case WM_LBUTTONUP:
+		m_toolInputCommands.mouse_LB_Down = false;
+		m_toolInputCommands.mouse_LB_Hold = false;
+		break;
 		
 
 	case WM_RBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
@@ -352,61 +383,24 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 	}
+
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement
-	if (m_keyArray['W'])
-	{
-		m_toolInputCommands.forward = true;
-	}
-	else m_toolInputCommands.forward = false;
-	
-	if (m_keyArray['S'])
-	{
-		m_toolInputCommands.back = true;
-	}
-	else m_toolInputCommands.back = false;
-	if (m_keyArray['A'])
-	{
-		m_toolInputCommands.left = true;
-	}
-	else m_toolInputCommands.left = false;
 
-	if (m_keyArray['D'])
-	{
-		m_toolInputCommands.right = true;
-	}
-	else m_toolInputCommands.right = false;
+	m_toolInputCommands.forward = m_keyArray['W'];
+	m_toolInputCommands.back = m_keyArray['S'];
+	m_toolInputCommands.left = m_keyArray['A'];
+	m_toolInputCommands.right = m_keyArray['D'];
+	
 	//rotation
-	if (m_keyArray['E'])
-	{
-		m_toolInputCommands.rotRight = true;
-	}
-	else m_toolInputCommands.rotRight = false;
-	if (m_keyArray['Q'])
-	{
-		m_toolInputCommands.rotLeft = true;
-	}
-	else m_toolInputCommands.rotLeft = false;
+	m_toolInputCommands.rotRight = m_keyArray['E'];
+	m_toolInputCommands.rotLeft = m_keyArray['Q'];
 
 	// copy paste
-	if (m_keyArray[17]) {
-		m_toolInputCommands.control = true;
-	}
-	else {
-		m_toolInputCommands.control = false;
-	}
-	if (m_keyArray['C']) {
-		m_toolInputCommands.key_c = true;
-	}
-	else {
-		m_toolInputCommands.key_c = false;
-	}
-	if (m_keyArray['V']) {
-		m_toolInputCommands.key_v = true;
-	}
-	else {
-		m_toolInputCommands.key_v = false;
-	}
+	m_toolInputCommands.control = m_keyArray[17];
+	m_toolInputCommands.key_c = m_keyArray['C'];
+	m_toolInputCommands.key_v = m_keyArray['V'];
+
 	if (m_keyArray['X']) {
 		m_toolInputCommands.key_x = true;
 	}
