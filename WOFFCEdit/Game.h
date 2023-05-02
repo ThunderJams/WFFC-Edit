@@ -37,6 +37,7 @@ public:
 	void Delete(int id);
 	void Cut(int id);
 	void StopErasing() { erasing = false;}
+	void StopPasting() { pasting = false; }
 	void MoveObject(int moveX, int moveY, int id);
 
 	// Rendering helpers
@@ -82,6 +83,7 @@ private:
 
 	DisplayObject copiedObject;
 	bool erasing = false;
+	bool pasting = false;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

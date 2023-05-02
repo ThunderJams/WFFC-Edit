@@ -313,6 +313,7 @@ void ToolMain::Tick(MSG *msg)
 		}
 	}
 
+	// copy/paste
 	 if (m_toolInputCommands.key_c && m_toolInputCommands.control) {
 		 m_d3dRenderer.Copy(m_selectedObject);
 	 }
@@ -322,6 +323,7 @@ void ToolMain::Tick(MSG *msg)
 
 	 if (m_toolInputCommands.key_v && m_toolInputCommands.control) {
 		 m_d3dRenderer.Paste();
+
 	 }
 
 
@@ -399,7 +401,15 @@ void ToolMain::UpdateInput(MSG * msg)
 	// copy paste
 	m_toolInputCommands.control = m_keyArray[17];
 	m_toolInputCommands.key_c = m_keyArray['C'];
-	m_toolInputCommands.key_v = m_keyArray['V'];
+
+	if (m_keyArray['V']) {
+		m_toolInputCommands.key_v = true;
+	}
+	else {
+		m_toolInputCommands.key_v = false;
+		// set erasing to false
+		m_d3dRenderer.StopPasting();
+	}
 
 	if (m_keyArray['X']) {
 		m_toolInputCommands.key_x = true;
@@ -409,4 +419,6 @@ void ToolMain::UpdateInput(MSG * msg)
 		// set erasing to false
 		m_d3dRenderer.StopErasing();
 	}
+
+	
 }

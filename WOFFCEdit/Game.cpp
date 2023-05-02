@@ -221,14 +221,19 @@ void Game::Copy(int id)
 
 void Game::Paste()
 {
-    // set the transform of the object to the camera position
-    copiedObject.m_position = camera.m_camPosition + (camera.m_camLookDirection * 3);
+    if (!pasting) {
+        // set the transform of the object to the camera position
+        copiedObject.m_position = camera.m_camPosition + (camera.m_camLookDirection * 3);
+
+
+        // push the copied object back to the display list
+        m_displayList.push_back(copiedObject);
+
+        erasing = false;
+
+        pasting = true;
+    }
     
-
-    // push the copied object back to the display list
-    m_displayList.push_back(copiedObject);
-
-    erasing = false;
 }
 
 void Game::Delete(int id) {
@@ -565,7 +570,7 @@ void Game::CreateDeviceDependentResources()
 
     m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 
-//    m_shape = GeometricPrimitive::CreateTeapot(context, 4.f, 8);
+    //m_shape = GeometricPrimitive::CreateTeapot(context, 4.f, 8);
 
     // SDKMESH has to use clockwise winding with right-handed coordinates, so textures are flipped in U
     m_model = Model::CreateFromSDKMESH(device, L"tiny.sdkmesh", *m_fxFactory);
