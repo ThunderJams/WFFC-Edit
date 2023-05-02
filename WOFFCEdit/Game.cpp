@@ -207,6 +207,14 @@ int Game::MousePicking()
 		}
 	}
 
+    if (selectedID != -1) {
+        //camera.m_camPosition = Vector3(m_displayList[selectedID].m_position.x + 3, m_displayList[selectedID].m_position.y, m_displayList[selectedID].m_position.z+ 3) ;
+        //camera.m_camLookAt = 
+        camera.m_camOrientation = (m_displayList[selectedID].m_position);
+    }
+
+    
+
 	//if we got a hit.  return it.  
 	return selectedID;
 }
