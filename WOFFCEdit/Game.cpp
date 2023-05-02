@@ -210,7 +210,7 @@ int Game::MousePicking()
     if (selectedID != -1) {
         //camera.m_camPosition = Vector3(m_displayList[selectedID].m_position.x + 3, m_displayList[selectedID].m_position.y, m_displayList[selectedID].m_position.z+ 3) ;
         //camera.m_camLookAt = 
-        camera.m_camOrientation = (m_displayList[selectedID].m_position);
+        //camera.m_camOrientation = (m_displayList[selectedID].m_position);
     }
 
     
@@ -260,7 +260,9 @@ void Game::Cut(int id) {
 
 void Game::MoveObject(int moveX, int moveY, int id)
 {
-    m_displayList[id].m_position = Vector3(m_displayList[id].m_position.x + moveX, m_displayList[id].m_position.y + moveY, m_displayList[id].m_position.z);
+    float xProportion = -XMVectorGetX(camera.m_camRight);
+    float zProportion = -XMVectorGetZ(camera.m_camRight);
+    m_displayList[id].m_position += Vector3(moveX * xProportion * 0.25, moveY * 0.25, moveX * zProportion * 0.25);
 }
 
 

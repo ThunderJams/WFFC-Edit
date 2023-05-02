@@ -289,10 +289,10 @@ void ToolMain::Tick(MSG *msg)
 			// calculate the difference in the mouse position transforms
 			int moveX = 0;
 			int moveY = 0;
-			if ((m_toolInputCommands.mouse_X - prevX) > 0) {
+			if ((m_toolInputCommands.mouse_X - prevX) < 0) {
 				moveX = 1;
 			}
-			else if ((m_toolInputCommands.mouse_X - prevX) < 0) {
+			else if ((m_toolInputCommands.mouse_X - prevX) > 0) {
 				moveX = -1;
 			}
 
