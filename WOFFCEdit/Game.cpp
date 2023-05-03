@@ -455,23 +455,27 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		
 		//create a temp display object that we will populate then append to the display list.
 		DisplayObject newDisplayObject;
+        HRESULT rs;		
+        rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);
 		
         if (i == 0) {
             //load model - the first model in the scene is the gizmo
             newDisplayObject.m_model = Model::CreateFromCMO(device, L"gizmo.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+
+            //Load Texture
+            rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
             
         }
         else {
             //load model
             std::wstring modelwstr = StringToWCHART(SceneGraph->at(i).model_path);							//convect string to Wchar
             newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
-        }
-		
 
-		//Load Texture
-		std::wstring texturewstr = StringToWCHART(SceneGraph->at(i).tex_diffuse_path);								//convect string to Wchar
-		HRESULT rs;
-		rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+            //Load Texture
+            std::wstring texturewstr = StringToWCHART(SceneGraph->at(i).tex_diffuse_path);								//convect string to Wchar
+            HRESULT rs;
+            rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+        }
 
 		//if texture fails.  load error default
 		if (rs)
