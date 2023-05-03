@@ -1,0 +1,1 @@
+C:\Users\Ewan\Downloads\meshConv\meshconvert.exe C:\Users\Ewan\Downloads\meshConv\gizmo.obj -cmo
