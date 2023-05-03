@@ -39,6 +39,7 @@ public:
 	void StopErasing() { erasing = false;}
 	void StopPasting() { pasting = false; }
 	void MoveObject(int moveX, int moveY, int id);
+	void WidgetGeneration(int id);
 
 	// Rendering helpers
 	void Clear();

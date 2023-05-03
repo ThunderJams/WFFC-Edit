@@ -125,6 +125,8 @@ void Game::Update(DX::StepTimer const& timer)
 	m_displayChunk.m_terrainEffect->SetView(m_view);
 	m_displayChunk.m_terrainEffect->SetWorld(Matrix::Identity);
 
+	
+
 #ifdef DXTK_AUDIO
     m_audioTimerAcc -= (float)timer.GetElapsedSeconds();
     if (m_audioTimerAcc < 0)
@@ -197,7 +199,7 @@ int Game::MousePicking()
 			//checking for ray intersection
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
-				if (pickedDistance < minDistance)
+				if (pickedDistance < minDistance && i != 0)
 				{
 					minDistance = pickedDistance;
 					selectedID = i;
@@ -207,54 +209,7 @@ int Game::MousePicking()
 		}
 	}
 
-    if (selectedID != -1) {
-        //Vector3 position = m_displayList[selectedID].m_position;
-        //VertexPositionColor vertices[] = 
-        //{
-        //    { XMFLOAT3(m_displayList[selectedID].m_position.x, m_displayList[selectedID].m_position.y, m_displayList[selectedID].m_position.z), XMFLOAT4(1, 0, 0, 1) }, // tip of arrow
-        //    { XMFLOAT3(position.x + 0.2f, position.y + 0.05f, position.z), XMFLOAT4(1, 0, 0, 1) }, // top of arrow
-        //    { XMFLOAT3(position.x + 0.2f, position.y - 0.05f, position.z), XMFLOAT4(1, 0, 0, 1) }, // bottom of arrow
-        //    { XMFLOAT3(position.x + 0.2f, position.y + 0.05f, position.z), XMFLOAT4(1, 0, 0, 1) }, // top of arrow
-        //    { XMFLOAT3(position.x + 0.2f, position.y, position.z + 0.05f), XMFLOAT4(1, 0, 0, 1) }, // right edge of arrowhead
-        //    { XMFLOAT3(position.x + 0.2f, position.y, position.z - 0.05f), XMFLOAT4(1, 0, 0, 1) }, // left edge of arrowhead
-        //    { XMFLOAT3(position.x + 0.2f, position.y - 0.05f, position.z), XMFLOAT4(1, 0, 0, 1) } // bottom of arrow
-        //};
-
-        //ComPtr<ID3D11Buffer> vertexBuffer;
-        //D3D11_BUFFER_DESC vertexBufferDesc = {};
-        //vertexBufferDesc.ByteWidth = sizeof(vertices);
-        //vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-        //vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-        //D3D11_SUBRESOURCE_DATA vertexBufferData = {};
-        //vertexBufferData.pSysMem = vertices;
-
-        //auto context = m_deviceResources->GetD3DDeviceContext();
-        //auto device = m_deviceResources->GetD3DDevice();
-
-        //device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, vertexBuffer.GetAddressOf());
-		
-        //UINT stride = sizeof(VertexPositionColor);
-        //UINT offset = 0;
-        //context->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-        //context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-        //// Define the arrow length and thickness
-        //float length = 1.0f;
-        //float thickness = 0.1f;
-
-        //// Define the scaling factor for the arrow
-        //float scale = 2.0f;
-
-        //// Create the arrow transformation matrix
-        //XMMATRIX arrowTransform = XMMatrixTranslation(0.0f, 0.0f, length) * XMMatrixRotationX(XM_PIDIV2) * XMMatrixScaling(thickness, thickness, scale * length);
-
-        //// Set the transformation matrix as the world matrix for rendering
-        //context->UpdateSubresource(vertexBuffer.Get(), 0, nullptr, &arrowTransform, 0, 0);
-        //context->DrawIndexed(7, 0, 0);
-		
-        ////context->Draw(7, 0);
-    }
+    
 
     
 
@@ -306,6 +261,14 @@ void Game::MoveObject(int moveX, int moveY, int id)
     float xProportion = -XMVectorGetX(camera.m_camRight);
     float zProportion = -XMVectorGetZ(camera.m_camRight);
     m_displayList[id].m_position += Vector3(moveX * xProportion * 0.25, moveY * 0.25, moveX * zProportion * 0.25);
+}
+
+void Game::WidgetGeneration(int id)
+{
+    // generate widget at position
+    if (id != -1) {
+        m_displayList[0].m_position = Vector3(m_displayList[id].m_position.x, m_displayList[id].m_position.y + 0.5, m_displayList[id].m_position.z);
+    }
 }
 
 
@@ -493,9 +456,17 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		//create a temp display object that we will populate then append to the display list.
 		DisplayObject newDisplayObject;
 		
-		//load model
-		std::wstring modelwstr = StringToWCHART(SceneGraph->at(i).model_path);							//convect string to Wchar
-		newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+        if (i == 0) {
+            //load model - the first model in the scene is the gizmo
+            newDisplayObject.m_model = Model::CreateFromCMO(device, L"gizmo.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+            
+        }
+        else {
+            //load model
+            std::wstring modelwstr = StringToWCHART(SceneGraph->at(i).model_path);							//convect string to Wchar
+            newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+        }
+		
 
 		//Load Texture
 		std::wstring texturewstr = StringToWCHART(SceneGraph->at(i).tex_diffuse_path);								//convect string to Wchar
@@ -532,6 +503,11 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		newDisplayObject.m_scale.x = SceneGraph->at(i).scaX;
 		newDisplayObject.m_scale.y = SceneGraph->at(i).scaY;
 		newDisplayObject.m_scale.z = SceneGraph->at(i).scaZ;
+
+        if (i == 0) {
+            newDisplayObject.m_scale *= 2.5;
+
+        }
 
 		//set wireframe / render flags
 		newDisplayObject.m_render		= SceneGraph->at(i).editor_render;

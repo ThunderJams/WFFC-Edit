@@ -1,22 +1,23 @@
 ﻿  Game.cpp
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(164,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(164,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(165,81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(165,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(180,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(179,147): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(179,98): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(186,111): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(186,85): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(188,109): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(188,83): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(308,107): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(308,79): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(308,65): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(343,45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(353,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(352,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(351,97): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(337,10): warning C4101: 'Buffer': unreferenced local variable
-C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(489,37): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(166,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(166,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(167,81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(167,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(182,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(181,147): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(181,98): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(188,111): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(188,85): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(190,109): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(190,83): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(263,107): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(263,79): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(263,65): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(270,110): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(306,45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(316,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(315,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(314,97): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(300,10): warning C4101: 'Buffer': unreferenced local variable
+C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\Game.cpp(452,37): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Win32SimpleSample.vcxproj -> C:\Users\Ewan\GitHub\WFFC-Edit\WOFFCEdit\x64\Debug\WoFEdit.exe

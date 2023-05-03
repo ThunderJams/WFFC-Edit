@@ -326,6 +326,11 @@ void ToolMain::Tick(MSG *msg)
 
 	 }
 
+	 if (m_selectedObject != 1) {
+		 m_d3dRenderer.WidgetGeneration(m_selectedObject);
+
+	 }
+
 
 	//has something changed
 		//update Scenegraph
