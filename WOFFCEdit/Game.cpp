@@ -208,9 +208,52 @@ int Game::MousePicking()
 	}
 
     if (selectedID != -1) {
-        //camera.m_camPosition = Vector3(m_displayList[selectedID].m_position.x + 3, m_displayList[selectedID].m_position.y, m_displayList[selectedID].m_position.z+ 3) ;
-        //camera.m_camLookAt = 
-        //camera.m_camOrientation = (m_displayList[selectedID].m_position);
+        //Vector3 position = m_displayList[selectedID].m_position;
+        //VertexPositionColor vertices[] = 
+        //{
+        //    { XMFLOAT3(m_displayList[selectedID].m_position.x, m_displayList[selectedID].m_position.y, m_displayList[selectedID].m_position.z), XMFLOAT4(1, 0, 0, 1) }, // tip of arrow
+        //    { XMFLOAT3(position.x + 0.2f, position.y + 0.05f, position.z), XMFLOAT4(1, 0, 0, 1) }, // top of arrow
+        //    { XMFLOAT3(position.x + 0.2f, position.y - 0.05f, position.z), XMFLOAT4(1, 0, 0, 1) }, // bottom of arrow
+        //    { XMFLOAT3(position.x + 0.2f, position.y + 0.05f, position.z), XMFLOAT4(1, 0, 0, 1) }, // top of arrow
+        //    { XMFLOAT3(position.x + 0.2f, position.y, position.z + 0.05f), XMFLOAT4(1, 0, 0, 1) }, // right edge of arrowhead
+        //    { XMFLOAT3(position.x + 0.2f, position.y, position.z - 0.05f), XMFLOAT4(1, 0, 0, 1) }, // left edge of arrowhead
+        //    { XMFLOAT3(position.x + 0.2f, position.y - 0.05f, position.z), XMFLOAT4(1, 0, 0, 1) } // bottom of arrow
+        //};
+
+        //ComPtr<ID3D11Buffer> vertexBuffer;
+        //D3D11_BUFFER_DESC vertexBufferDesc = {};
+        //vertexBufferDesc.ByteWidth = sizeof(vertices);
+        //vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+        //vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+        //D3D11_SUBRESOURCE_DATA vertexBufferData = {};
+        //vertexBufferData.pSysMem = vertices;
+
+        //auto context = m_deviceResources->GetD3DDeviceContext();
+        //auto device = m_deviceResources->GetD3DDevice();
+
+        //device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, vertexBuffer.GetAddressOf());
+		
+        //UINT stride = sizeof(VertexPositionColor);
+        //UINT offset = 0;
+        //context->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+        //context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        //// Define the arrow length and thickness
+        //float length = 1.0f;
+        //float thickness = 0.1f;
+
+        //// Define the scaling factor for the arrow
+        //float scale = 2.0f;
+
+        //// Create the arrow transformation matrix
+        //XMMATRIX arrowTransform = XMMatrixTranslation(0.0f, 0.0f, length) * XMMatrixRotationX(XM_PIDIV2) * XMMatrixScaling(thickness, thickness, scale * length);
+
+        //// Set the transformation matrix as the world matrix for rendering
+        //context->UpdateSubresource(vertexBuffer.Get(), 0, nullptr, &arrowTransform, 0, 0);
+        //context->DrawIndexed(7, 0, 0);
+		
+        ////context->Draw(7, 0);
     }
 
     
