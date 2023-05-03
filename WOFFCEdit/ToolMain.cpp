@@ -3,6 +3,9 @@
 #include <vector>
 #include <sstream>
 
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
+
 //
 //ToolMain Class
 ToolMain::ToolMain()
@@ -285,7 +288,7 @@ void ToolMain::Tick(MSG *msg)
 	//are we clicking / dragging /releasing
 	if (m_toolInputCommands.mouse_LB_Down || m_toolInputCommands.mouse_LB_Hold) {
 		// check if the object we are clicking on is the same as what is selected
-		if (m_selectedObject == m_d3dRenderer.MousePicking() || m_toolInputCommands.mouse_LB_Hold) {
+		if (0 == m_d3dRenderer.MousePicking(false) || 1 == m_d3dRenderer.MousePicking(false)  || 2 == m_d3dRenderer.MousePicking(false) || m_toolInputCommands.mouse_LB_Hold || m_d3dRenderer.GetSelectedAxis() != 'a') {
 			// calculate the difference in the mouse position transforms
 			int moveX = 0;
 			int moveY = 0;
@@ -302,14 +305,45 @@ void ToolMain::Tick(MSG *msg)
 			else if ((m_toolInputCommands.mouse_Y - prevY) > 0) {
 				moveY = -1;
 			}
-			m_d3dRenderer.MoveObject(moveX, moveY, m_selectedObject);
+
+			if (0 == m_d3dRenderer.MousePicking(false)) {
+				m_d3dRenderer.MoveObject(moveX, moveY, m_selectedObject, 'z');
+			}
+			else if (1 == m_d3dRenderer.MousePicking(false)) {
+				m_d3dRenderer.MoveObject(moveX, moveY, m_selectedObject, 'x');
+			}
+			if (2 == m_d3dRenderer.MousePicking(false)) {
+				m_d3dRenderer.MoveObject(moveX, moveY, m_selectedObject, 'y');
+			}
+			//m_d3dRenderer.MoveObject(moveX, moveY, m_selectedObject, true);
+			m_toolInputCommands.mouse_LB_Down = false;
+			m_toolInputCommands.mouse_LB_Hold = true;
+		}
+		else if (m_selectedObject == m_d3dRenderer.MousePicking(true) || m_toolInputCommands.mouse_LB_Hold) {
+			// calculate the difference in the mouse position transforms
+			int moveX = 0;
+			int moveY = 0;
+			if ((m_toolInputCommands.mouse_X - prevX) < 0) {
+				moveX = 1;
+			}
+			else if ((m_toolInputCommands.mouse_X - prevX) > 0) {
+				moveX = -1;
+			}
+
+			if ((m_toolInputCommands.mouse_Y - prevY) < 0) {
+				moveY = 1;
+			}
+			else if ((m_toolInputCommands.mouse_Y - prevY) > 0) {
+				moveY = -1;
+			}
+			m_d3dRenderer.MoveObject(moveX, moveY, m_selectedObject, false);
 			m_toolInputCommands.mouse_LB_Down = false;
 			m_toolInputCommands.mouse_LB_Hold = true;
 		}
 		// otherwise, set the mouse to click on the new object
 		else {
 			m_toolInputCommands.mouse_LB_Down = false;
-			m_selectedObject = m_d3dRenderer.MousePicking();
+			m_selectedObject = m_d3dRenderer.MousePicking(true);
 		}
 	}
 
@@ -374,6 +408,7 @@ void ToolMain::UpdateInput(MSG * msg)
 	case WM_LBUTTONUP:
 		m_toolInputCommands.mouse_LB_Down = false;
 		m_toolInputCommands.mouse_LB_Hold = false;
+		m_d3dRenderer.ResetSelectedAxis();
 		break;
 		
 

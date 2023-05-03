@@ -13,6 +13,7 @@
 #include "InputCommands.h"
 #include <vector>
 #include "Camera.h"
+#include <cmath>
 
 
 // A basic game implementation that creates a D3D11 device and
@@ -31,14 +32,16 @@ public:
 	// Basic game loop
 	void Tick(InputCommands * Input);
 	void Render();
-	int	 MousePicking();
+	int	 MousePicking(bool ignoreGizmo);
 	void Copy(int id);
 	void Paste();
 	void Delete(int id);
 	void Cut(int id);
 	void StopErasing() { erasing = false;}
 	void StopPasting() { pasting = false; }
-	void MoveObject(int moveX, int moveY, int id);
+	void ResetSelectedAxis() { selectedAxis = 'a'; };
+	char GetSelectedAxis() { return selectedAxis; };
+	void MoveObject(int moveX, int moveY, int id, char axis);
 	void WidgetGeneration(int id);
 
 	// Rendering helpers
@@ -85,6 +88,8 @@ private:
 	DisplayObject copiedObject;
 	bool erasing = false;
 	bool pasting = false;
+	char selectedAxis = 'w';
+	//bool gizmoSelected = true;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

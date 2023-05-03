@@ -1,1 +1,7 @@
 C:\Users\Ewan\Downloads\meshConv\meshconvert.exe C:\Users\Ewan\Downloads\meshConv\gizmo.obj -cmo
+
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\packages\meshConv\meshconvert.exe D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\packages\meshConv\forwardArrow.obj -cmo
+
+C:\Users\1900176\Downloads\meshConv\mes
+
+C:\Users\1900176\Downloads\meshConv\meshconvert.exe C:\Users\1900176\Downloads\meshConv\gizmo.obj -cmo

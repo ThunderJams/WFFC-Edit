@@ -156,7 +156,7 @@ void Game::Update(DX::StepTimer const& timer)
 }
 #pragma endregion
 
-int Game::MousePicking()
+int Game::MousePicking(bool ignoreGizmo)
 {
 	int selectedID = -1;
 	float pickedDistance = 0;
@@ -199,11 +199,16 @@ int Game::MousePicking()
 			//checking for ray intersection
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
-				if (pickedDistance < minDistance && i != 0)
+				if (pickedDistance < minDistance && (i != 0 && i != 1 && i != 2 && ignoreGizmo))
 				{
 					minDistance = pickedDistance;
 					selectedID = i;
 				}
+                else if (pickedDistance < minDistance) {
+                    minDistance = pickedDistance;
+                    selectedID = i;
+                }
+
 				//selectedID = i;
 			}
 		}
@@ -256,18 +261,58 @@ void Game::Cut(int id) {
     Delete(id);
 }
 
-void Game::MoveObject(int moveX, int moveY, int id)
+void Game::MoveObject(int moveX, int moveY, int id, char axis)
 {
-    float xProportion = -XMVectorGetX(camera.m_camRight);
-    float zProportion = -XMVectorGetZ(camera.m_camRight);
-    m_displayList[id].m_position += Vector3(moveX * xProportion * 0.25, moveY * 0.25, moveX * zProportion * 0.25);
+    if (id != -1) {
+        
+        if (selectedAxis != 'x' && selectedAxis != 'y' && selectedAxis != 'z') selectedAxis = axis;
+        
+        float xProportion = -XMVectorGetX(camera.m_camRight);
+        float zProportion = -XMVectorGetZ(camera.m_camRight);
+
+        if (selectedAxis == 'x') {
+            m_displayList[id].m_position += Vector3(moveX * xProportion * 0.25, 0, 0);
+        }
+        else if ((selectedAxis == 'y')) {
+            m_displayList[id].m_position += Vector3(0, moveY * 0.25, 0);
+        }
+        else if (selectedAxis == 'z') {
+            m_displayList[id].m_position += Vector3(0, 0, moveX * zProportion * 0.25);
+        }
+        else {
+            
+            m_displayList[id].m_position += Vector3(moveX * xProportion * 0.25, moveY * 0.25, moveX * zProportion * 0.25);
+        }
+    }
+
+    
 }
 
 void Game::WidgetGeneration(int id)
 {
     // generate widget at position
     if (id != -1) {
+        m_displayList[0].m_render = true;
         m_displayList[0].m_position = Vector3(m_displayList[id].m_position.x, m_displayList[id].m_position.y + 0.5, m_displayList[id].m_position.z);
+        m_displayList[0].m_orientation = m_displayList[id].m_orientation;
+
+        m_displayList[1].m_render = true;
+        m_displayList[1].m_position = Vector3(m_displayList[id].m_position.x, m_displayList[id].m_position.y + 0.5, m_displayList[id].m_position.z);
+        m_displayList[1].m_orientation = m_displayList[id].m_orientation;
+
+        m_displayList[2].m_render = true;
+        m_displayList[2].m_position = Vector3(m_displayList[id].m_position.x, m_displayList[id].m_position.y, m_displayList[id].m_position.z - 0.5);
+        m_displayList[2].m_orientation = m_displayList[id].m_orientation;
+    }
+    else {
+        m_displayList[0].m_render = false;
+        m_displayList[0].m_position = Vector3(100, 100, 100);
+
+        m_displayList[1].m_render = false;
+        m_displayList[1].m_position = Vector3(100, 100, 100);
+
+        m_displayList[2].m_render = false;
+        m_displayList[2].m_position = Vector3(100, 100, 100);
     }
 }
 
@@ -448,6 +493,91 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		m_displayList.clear();		//if not, empty it
 	}
 
+    // add 3 objects at the front of the displayList for the gizmo
+    for (int i = 0; i < 3; i++) {
+        //create a temp display object that we will populate then append to the display list.
+        DisplayObject newDisplayObject;
+        HRESULT rs;
+        rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);
+
+        if (i == 0) {
+            //load model - the first model in the scene is the gizmo
+            newDisplayObject.m_model = Model::CreateFromCMO(device, L"forward.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+
+            //Load Texture
+            rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+
+        }
+        else if (i == 1) {
+            //load model - the first model in the scene is the gizmo
+            newDisplayObject.m_model = Model::CreateFromCMO(device, L"right.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+
+            //Load Texture
+            rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+        }
+        else if (i == 2) {
+            //load model - the first model in the scene is the gizmo
+            newDisplayObject.m_model = Model::CreateFromCMO(device, L"up.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+
+            //Load Texture
+            rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+        }
+
+        //if texture fails.  load error default
+        if (rs)
+        {
+            CreateDDSTextureFromFile(device, L"database/data/Error.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+        }
+
+        //apply new texture to models effect
+        newDisplayObject.m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+            {
+                auto lights = dynamic_cast<BasicEffect*>(effect);
+                if (lights)
+                {
+                    lights->SetTexture(newDisplayObject.m_texture_diffuse);
+                }
+            });
+
+        //setorientation
+        newDisplayObject.m_orientation.x = SceneGraph->at(i).rotX;
+        newDisplayObject.m_orientation.y = SceneGraph->at(i).rotY;
+        newDisplayObject.m_orientation.z = SceneGraph->at(i).rotZ;
+
+        //set scale
+        newDisplayObject.m_scale.x = SceneGraph->at(i).scaX;
+        newDisplayObject.m_scale.y = SceneGraph->at(i).scaY;
+        newDisplayObject.m_scale.z = SceneGraph->at(i).scaZ;
+
+        if (i == 0 || i == 1 || i == 2) {
+            newDisplayObject.m_position.x = 100;
+            newDisplayObject.m_position.y = 100;
+            newDisplayObject.m_position.z = 100;
+            newDisplayObject.m_scale *= 3;
+
+        }
+
+        //set wireframe / render flags
+        newDisplayObject.m_render = SceneGraph->at(i).editor_render;
+        newDisplayObject.m_wireframe = SceneGraph->at(i).editor_wireframe;
+
+        /*newDisplayObject.m_light_type = SceneGraph->at(i).light_type;
+        newDisplayObject.m_light_diffuse_r = SceneGraph->at(i).light_diffuse_r;
+        newDisplayObject.m_light_diffuse_g = SceneGraph->at(i).light_diffuse_g;
+        newDisplayObject.m_light_diffuse_b = SceneGraph->at(i).light_diffuse_b;
+        newDisplayObject.m_light_specular_r = SceneGraph->at(i).light_specular_r;
+        newDisplayObject.m_light_specular_g = SceneGraph->at(i).light_specular_g;
+        newDisplayObject.m_light_specular_b = SceneGraph->at(i).light_specular_b;
+        newDisplayObject.m_light_spot_cutoff = SceneGraph->at(i).light_spot_cutoff;
+        newDisplayObject.m_light_constant = SceneGraph->at(i).light_constant;
+        newDisplayObject.m_light_linear = SceneGraph->at(i).light_linear;
+        newDisplayObject.m_light_quadratic = SceneGraph->at(i).light_quadratic;*/
+
+        m_displayList.push_back(newDisplayObject);
+    }
+
+    
+
 	//for every item in the scenegraph
 	int numObjects = SceneGraph->size();
 	for (int i = 0; i < numObjects; i++)
@@ -458,15 +588,9 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
         HRESULT rs;		
         rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);
 		
-        if (i == 0) {
-            //load model - the first model in the scene is the gizmo
-            newDisplayObject.m_model = Model::CreateFromCMO(device, L"gizmo.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
-
-            //Load Texture
-            rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
-            
-        }
-        else {
+        
+        
+        {
             //load model
             std::wstring modelwstr = StringToWCHART(SceneGraph->at(i).model_path);							//convect string to Wchar
             newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
@@ -507,11 +631,6 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		newDisplayObject.m_scale.x = SceneGraph->at(i).scaX;
 		newDisplayObject.m_scale.y = SceneGraph->at(i).scaY;
 		newDisplayObject.m_scale.z = SceneGraph->at(i).scaZ;
-
-        if (i == 0) {
-            newDisplayObject.m_scale *= 2.5;
-
-        }
 
 		//set wireframe / render flags
 		newDisplayObject.m_render		= SceneGraph->at(i).editor_render;
