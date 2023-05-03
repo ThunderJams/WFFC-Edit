@@ -8,7 +8,7 @@ using Microsoft::WRL::ComPtr;
  Camera::Camera() {
 	////functional
 	m_movespeed = 0.30;
-	m_camRotRate = 3.0;
+	m_camRotRate = 1.0;
 
 	//camera
 	m_camPosition.x = 0.0f;
@@ -42,6 +42,8 @@ void Camera::Update(InputCommands inp)
 	Vector3 planarMotionVector = m_camLookDirection;
 	planarMotionVector.y = 0.0;
 
+	
+
 	if (inp.mouse_RB_Down)
 	{
 		
@@ -49,9 +51,9 @@ void Camera::Update(InputCommands inp)
 		float deltaX = inp.mouse_X - m_PrevMouseX;
 		float deltaY = inp.mouse_Y - m_PrevMouseY;
 
-		//update previous mouse position
-		m_PrevMouseX = inp.mouse_X;
-		m_PrevMouseY = inp.mouse_Y;
+		
+
+
 
 		m_camOrientation.y -= deltaX * m_camRotRate;
 		m_camOrientation.x -= deltaY * m_camRotRate;
@@ -67,8 +69,8 @@ void Camera::Update(InputCommands inp)
 	}
 
 	//create look direction from Euler angles in m_camOrientation
-	m_camLookDirection.x = sin((m_camOrientation.y) * 3.1415 / 180);
-	m_camLookDirection.z = cos((m_camOrientation.y) * 3.1415 / 180);
+	m_camLookDirection.x = Lerp(m_camLookDirection.x, sin((m_camOrientation.y) * 3.1415 / 180), 0.5);
+	m_camLookDirection.z = Lerp(m_camLookDirection.z, cos((m_camOrientation.y) * 3.1415 / 180), 0.5);
 	m_camLookDirection.Normalize();
 
 	//create right vector from look Direction
@@ -91,9 +93,22 @@ void Camera::Update(InputCommands inp)
 	{
 		m_camPosition -= m_camRight * m_movespeed;
 	}
+	if (inp.up) {
+		m_camPosition.y += m_movespeed;
+	}
+	if (inp.down) {
+		m_camPosition.y -= m_movespeed;
+	}
 
 	//update lookat point
 	m_camLookAt = m_camPosition + m_camLookDirection;
 
-	
+	//update previous mouse position
+	m_PrevMouseX = inp.mouse_X;
+	m_PrevMouseY = inp.mouse_Y;
+}
+
+float Camera::Lerp(float start, float end, float t)
+{
+	return start + t * (end - start);
 }

@@ -498,14 +498,14 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
         //create a temp display object that we will populate then append to the display list.
         DisplayObject newDisplayObject;
         HRESULT rs;
-        rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);
+        
 
         if (i == 0) {
             //load model - the first model in the scene is the gizmo
             newDisplayObject.m_model = Model::CreateFromCMO(device, L"forward.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
 
             //Load Texture
-            rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+            //rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
 
         }
         else if (i == 1) {
@@ -513,15 +513,17 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
             newDisplayObject.m_model = Model::CreateFromCMO(device, L"right.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
 
             //Load Texture
-            rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+            //rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
         }
         else if (i == 2) {
             //load model - the first model in the scene is the gizmo
             newDisplayObject.m_model = Model::CreateFromCMO(device, L"up.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
 
             //Load Texture
-            rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+            //rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
         }
+
+        rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);
 
         //if texture fails.  load error default
         if (rs)
@@ -561,7 +563,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
         newDisplayObject.m_render = SceneGraph->at(i).editor_render;
         newDisplayObject.m_wireframe = SceneGraph->at(i).editor_wireframe;
 
-        /*newDisplayObject.m_light_type = SceneGraph->at(i).light_type;
+        newDisplayObject.m_light_type = SceneGraph->at(i).light_type;
         newDisplayObject.m_light_diffuse_r = SceneGraph->at(i).light_diffuse_r;
         newDisplayObject.m_light_diffuse_g = SceneGraph->at(i).light_diffuse_g;
         newDisplayObject.m_light_diffuse_b = SceneGraph->at(i).light_diffuse_b;
@@ -571,7 +573,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
         newDisplayObject.m_light_spot_cutoff = SceneGraph->at(i).light_spot_cutoff;
         newDisplayObject.m_light_constant = SceneGraph->at(i).light_constant;
         newDisplayObject.m_light_linear = SceneGraph->at(i).light_linear;
-        newDisplayObject.m_light_quadratic = SceneGraph->at(i).light_quadratic;*/
+        newDisplayObject.m_light_quadratic = SceneGraph->at(i).light_quadratic;
 
         m_displayList.push_back(newDisplayObject);
     }

@@ -435,8 +435,8 @@ void ToolMain::UpdateInput(MSG * msg)
 	m_toolInputCommands.right = m_keyArray['D'];
 	
 	//rotation
-	m_toolInputCommands.rotRight = m_keyArray['E'];
-	m_toolInputCommands.rotLeft = m_keyArray['Q'];
+	m_toolInputCommands.up = m_keyArray['E'];
+	m_toolInputCommands.down = m_keyArray['Q'];
 
 	// copy paste
 	m_toolInputCommands.control = m_keyArray[17];

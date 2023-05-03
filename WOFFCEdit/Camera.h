@@ -18,6 +18,7 @@ class Camera
 public: 
 	Camera();
 	void Update(InputCommands inp);
+	float Lerp(float start, float end, float t);
 
 	//functionality
 	float								m_movespeed;
