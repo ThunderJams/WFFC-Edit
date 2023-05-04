@@ -1,7 +1,8 @@
 ﻿  Camera.cpp
 D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(10,20): warning C4305: '=': truncation from 'double' to 'float'
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(72,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(73,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(107,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(108,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(66,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(67,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(68,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(102,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\Camera.cpp(103,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Win32SimpleSample.vcxproj -> D:\LocalWorkDir\1900176\WFFC-Edit\WOFFCEdit\x64\Debug\WoFEdit.exe

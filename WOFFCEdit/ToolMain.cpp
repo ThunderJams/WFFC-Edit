@@ -356,7 +356,7 @@ void ToolMain::Tick(MSG *msg)
 	 }
 
 	 if (m_toolInputCommands.key_v && m_toolInputCommands.control) {
-		 m_d3dRenderer.Paste();
+		 m_d3dRenderer.Paste(m_selectedObject);
 
 	 }
 

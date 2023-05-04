@@ -34,7 +34,7 @@ public:
 	void Render();
 	int	 MousePicking(bool ignoreGizmo);
 	void Copy(int id);
-	void Paste();
+	void Paste(int id);
 	void Delete(int id);
 	void Cut(int id);
 	void StopErasing() { erasing = false;}
@@ -88,6 +88,7 @@ private:
 	DisplayObject copiedObject;
 	bool erasing = false;
 	bool pasting = false;
+	bool cutting = false;
 	char selectedAxis = 'w';
 	//bool gizmoSelected = true;
 

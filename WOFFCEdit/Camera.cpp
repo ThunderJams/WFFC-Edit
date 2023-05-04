@@ -46,14 +46,8 @@ void Camera::Update(InputCommands inp)
 
 	if (inp.mouse_RB_Down)
 	{
-		
-
 		float deltaX = inp.mouse_X - m_PrevMouseX;
 		float deltaY = inp.mouse_Y - m_PrevMouseY;
-
-		
-
-
 
 		m_camOrientation.y -= deltaX * m_camRotRate;
 		m_camOrientation.x -= deltaY * m_camRotRate;
@@ -70,6 +64,7 @@ void Camera::Update(InputCommands inp)
 
 	//create look direction from Euler angles in m_camOrientation
 	m_camLookDirection.x = Lerp(m_camLookDirection.x, sin((m_camOrientation.y) * 3.1415 / 180), 0.5);
+	m_camLookDirection.y = Lerp(m_camLookDirection.y, sin((m_camOrientation.x) * 3.1415 / 180), 0.5);
 	m_camLookDirection.z = Lerp(m_camLookDirection.z, cos((m_camOrientation.y) * 3.1415 / 180), 0.5);
 	m_camLookDirection.Normalize();
 

@@ -230,7 +230,7 @@ void Game::Copy(int id)
     copiedObject = m_displayList[id];
 }
 
-void Game::Paste()
+void Game::Paste(int id)
 {
     if (!pasting) {
         // set the transform of the object to the camera position
@@ -243,6 +243,11 @@ void Game::Paste()
         erasing = false;
 
         pasting = true;
+
+        if (cutting) {
+            Delete(id);
+            cutting = false;
+        }
     }
     
 }
@@ -258,7 +263,10 @@ void Game::Delete(int id) {
 
 void Game::Cut(int id) {
     Copy(id);
-    Delete(id);
+    cutting = true;
+    
+    //m_displayList[id].m_render = false;
+    //copiedObject.m_render = false;
 }
 
 void Game::MoveObject(int moveX, int moveY, int id, char axis)
@@ -270,18 +278,20 @@ void Game::MoveObject(int moveX, int moveY, int id, char axis)
         float xProportion = -XMVectorGetX(camera.m_camRight);
         float zProportion = -XMVectorGetZ(camera.m_camRight);
 
+        float moveSensitivity = 0.1;
+
         if (selectedAxis == 'x') {
-            m_displayList[id].m_position += Vector3(moveX * xProportion * 0.25, 0, 0);
+            m_displayList[id].m_position += Vector3(moveX * xProportion * moveSensitivity, 0, 0);
         }
         else if ((selectedAxis == 'y')) {
-            m_displayList[id].m_position += Vector3(0, moveY * 0.25, 0);
+            m_displayList[id].m_position += Vector3(0, moveY * moveSensitivity, 0);
         }
         else if (selectedAxis == 'z') {
-            m_displayList[id].m_position += Vector3(0, 0, moveX * zProportion * 0.25);
+            m_displayList[id].m_position += Vector3(0, 0, moveX * zProportion * moveSensitivity);
         }
         else {
             
-            m_displayList[id].m_position += Vector3(moveX * xProportion * 0.25, moveY * 0.25, moveX * zProportion * 0.25);
+            m_displayList[id].m_position += Vector3(moveX * xProportion * moveSensitivity, moveY * moveSensitivity, moveX * zProportion * moveSensitivity);
         }
     }
 
