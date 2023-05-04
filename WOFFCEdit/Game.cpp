@@ -243,11 +243,6 @@ void Game::Paste(int id)
         erasing = false;
 
         pasting = true;
-
-        if (cutting) {
-            Delete(id);
-            cutting = false;
-        }
     }
     
 }
@@ -255,6 +250,7 @@ void Game::Paste(int id)
 void Game::Delete(int id) {
     if (erasing == false) {
         m_displayList.erase(m_displayList.begin() + id);
+        
         erasing = true;
     }
 
@@ -263,10 +259,7 @@ void Game::Delete(int id) {
 
 void Game::Cut(int id) {
     Copy(id);
-    cutting = true;
-    
-    //m_displayList[id].m_render = false;
-    //copiedObject.m_render = false;
+    Delete(id);
 }
 
 void Game::MoveObject(int moveX, int moveY, int id, char axis)
@@ -325,6 +318,75 @@ void Game::WidgetGeneration(int id)
         m_displayList[2].m_position = Vector3(100, 100, 100);
     }
 }
+
+void Game::ObjectPlacement()
+{
+    //setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
+    const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
+    const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
+
+    //convert to wordspace points
+    XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+    XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+
+    //get mouse cast vector
+    XMVECTOR mouseCast = farPoint - nearPoint;
+    mouseCast = XMVector3Normalize(mouseCast);
+
+    Vector3 newObjPos = nearPoint + mouseCast * 10;
+
+    ObjectGeneration(newObjPos);
+
+}
+
+void Game::ObjectGeneration(Vector3 pos)
+{
+    auto device = m_deviceResources->GetD3DDevice();
+    auto devicecontext = m_deviceResources->GetD3DDeviceContext();
+	
+    //create a temp display object that we will populate then append to the display list.
+    DisplayObject newDisplayObject;
+    HRESULT rs;
+
+    //load model
+    //std::wstring modelwstr = StringToWCHART("database/data/placeholder.cmo");      
+    
+    newDisplayObject.m_model = Model::CreateFromCMO(device, L"database/data/placeholder.cmo", *m_fxFactory, true);//convect string to Wchar
+    CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"database/data/placeholder.dds", nullptr, &newDisplayObject.m_texture_diffuse);
+
+    //apply new texture to models effect
+    newDisplayObject.m_model->UpdateEffects([&](IEffect* effect)
+        {
+            auto lights = dynamic_cast<BasicEffect*>(effect);
+            if (lights)
+            {
+                lights->SetTexture(newDisplayObject.m_texture_diffuse);
+            }
+        });
+
+    //set position
+    newDisplayObject.m_position = pos;
+
+    //setorientation
+    newDisplayObject.m_orientation.x = 0;
+    newDisplayObject.m_orientation.y = 0;
+    newDisplayObject.m_orientation.z = 0;
+
+    //set scale
+    newDisplayObject.m_scale.x = 1;
+    newDisplayObject.m_scale.y = 1;
+    newDisplayObject.m_scale.z = 1;
+
+    //set wireframe / render flags
+    newDisplayObject.m_render = true;
+    
+
+    m_displayList.push_back(newDisplayObject);
+
+	
+}
+
+
 
 
 

@@ -286,7 +286,12 @@ void ToolMain::Tick(MSG *msg)
 	//do we have a selection
 	//do we have a mode
 	//are we clicking / dragging /releasing
-	if (m_toolInputCommands.mouse_LB_Down || m_toolInputCommands.mouse_LB_Hold) {
+	if (objectSpawning && m_toolInputCommands.mouse_LB_Down && !isObjectSpawned) {
+		isObjectSpawned = true;
+		m_d3dRenderer.ObjectPlacement();
+	}
+
+	if (!objectSpawning && (m_toolInputCommands.mouse_LB_Down || m_toolInputCommands.mouse_LB_Hold)) {
 		// check if the object we are clicking on is the same as what is selected
 		if (0 == m_d3dRenderer.MousePicking(false) || 1 == m_d3dRenderer.MousePicking(false)  || 2 == m_d3dRenderer.MousePicking(false) || m_toolInputCommands.mouse_LB_Hold || m_d3dRenderer.GetSelectedAxis() != 'a') {
 			// calculate the difference in the mouse position transforms
@@ -352,7 +357,11 @@ void ToolMain::Tick(MSG *msg)
 		 m_d3dRenderer.Copy(m_selectedObject);
 	 }
 	 else if (m_toolInputCommands.key_x && m_toolInputCommands.control) {
-		 m_d3dRenderer.Cut(m_selectedObject);
+		 if (m_selectedObject != -1) {
+			 m_d3dRenderer.Cut(m_selectedObject);
+			 m_selectedObject = -1;
+		}
+		 
 	 }
 
 	 if (m_toolInputCommands.key_v && m_toolInputCommands.control) {
@@ -409,6 +418,7 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.mouse_LB_Down = false;
 		m_toolInputCommands.mouse_LB_Hold = false;
 		m_d3dRenderer.ResetSelectedAxis();
+		isObjectSpawned = false;
 		break;
 		
 

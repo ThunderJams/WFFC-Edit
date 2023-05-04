@@ -43,6 +43,8 @@ public:
 	char GetSelectedAxis() { return selectedAxis; };
 	void MoveObject(int moveX, int moveY, int id, char axis);
 	void WidgetGeneration(int id);
+	void ObjectPlacement();
+	void ObjectGeneration(DirectX::SimpleMath::Vector3 pos);
 
 	// Rendering helpers
 	void Clear();

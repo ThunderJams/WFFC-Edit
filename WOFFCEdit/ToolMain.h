@@ -26,6 +26,7 @@ public: //methods
 
 	void	Tick(MSG *msg);
 	void	UpdateInput(MSG *msg);
+	void	SetObjectSpawning(bool b) { objectSpawning = b; };
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
@@ -52,6 +53,7 @@ private:	//variables
 	int prevX;
 	int prevY;
 	
-
+	bool objectSpawning   = false;
+	bool isObjectSpawned = false;
 	
 };
