@@ -290,7 +290,7 @@ void ToolMain::Tick(MSG *msg)
 		isObjectSpawned = true;
 		m_d3dRenderer.ObjectPlacement();
 	}
-	else if (terrainEdit && m_toolInputCommands.mouse_LB_Down) {
+	else if (terrainEdit && (m_toolInputCommands.mouse_LB_Down || m_toolInputCommands.mouse_RB_Down)) {
 		m_d3dRenderer.TerrainEdit();
 	}
 
@@ -415,6 +415,7 @@ void ToolMain::UpdateInput(MSG * msg)
 		//set some flag for the mouse button in inputcommands
 		//mouse left pressed.	
 		m_toolInputCommands.mouse_LB_Down = true;
+		m_toolInputCommands.terrainDirection = 1;
 		break;
 
 	case WM_LBUTTONUP:
@@ -422,20 +423,28 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.mouse_LB_Hold = false;
 		m_d3dRenderer.ResetSelectedAxis();
 		isObjectSpawned = false;
+
+		if (terrainEdit) m_d3dRenderer.RecalcuateTerrainNormals();
 		break;
 		
 
 	case WM_RBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
-		//mouse left pressed.	
+		//mouse right pressed.	
 		m_toolInputCommands.mouse_RB_Down = true;
+		m_toolInputCommands.terrainDirection = -1;
+
+		
 		break;
 
 	case WM_RBUTTONUP:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
-		//mouse left pressed.	
+		//mouse right up.	
 		m_toolInputCommands.mouse_RB_Down = false;
+		if (terrainEdit) m_d3dRenderer.RecalcuateTerrainNormals();
 		break;
+
+
 
 	}
 

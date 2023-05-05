@@ -21,7 +21,7 @@ struct InputCommands
 	bool key_x;
 	bool control;
 
-	bool terrainDirection;
+	float terrainDirection;
 
 
 };

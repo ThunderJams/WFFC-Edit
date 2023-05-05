@@ -18,6 +18,7 @@ public:
 	void SaveHeightMap();			//saves the heigtmap back to file.
 	void UpdateTerrain();			//updates the geometry based on the heigtmap
 	void GenerateHeightmap();		//creates or alters the heightmap
+	void CalculateTerrainNormals();
 	std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionNormalTexture>>  m_batch;
 	std::unique_ptr<DirectX::BasicEffect>       m_terrainEffect;
 
@@ -30,7 +31,7 @@ private:
 	
 	
 	BYTE m_heightMap[TERRAINRESOLUTION*TERRAINRESOLUTION];
-	void CalculateTerrainNormals();
+	
 
 	float	m_terrainHeightScale;
 	int		m_terrainSize;				//size of terrain in metres

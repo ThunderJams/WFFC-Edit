@@ -484,11 +484,12 @@ void Game::TerrainEdit()
             const int innerRadius = 15;
             if (distance < outerRadius)
             {
+                float moveAmount = 0.25f;
                 //if vertex is within radius, raise or lower it depending on direction, outer radius also factors in distance from intersection point
                 if (distance < innerRadius)
-                    m_displayChunk.m_terrainGeometry[i][j].position.y += 0.25f * m_InputCommands.terrainDirection;
+                    m_displayChunk.m_terrainGeometry[i][j].position.y += moveAmount * m_InputCommands.terrainDirection;
                 else
-                    m_displayChunk.m_terrainGeometry[i][j].position.y += 0.25f * m_InputCommands.terrainDirection * (1 - ((distance - innerRadius) / 10.f));
+                    m_displayChunk.m_terrainGeometry[i][j].position.y += moveAmount * m_InputCommands.terrainDirection * (1 - ((distance - innerRadius) / 10.f));
 
                 //keep vertex within bounds of height map
                 if (m_displayChunk.m_terrainGeometry[i][j].position.y < 0)
@@ -496,15 +497,14 @@ void Game::TerrainEdit()
                 else if (m_displayChunk.m_terrainGeometry[i][j].position.y > 64)
                     m_displayChunk.m_terrainGeometry[i][j].position.y = 64;
 
-                //recalculate normals
-                //m_displayChunk.CalculateTerrainNormal(i, j);
-                std::pair<int, int> point;
+                
 
             }
         }
     }
 
-    m_displayChunk.UpdateTerrain();
+    RecalcuateTerrainNormals();
+    
 }
 
 std::pair<int, int> Game::TerrainInfo()
@@ -592,6 +592,8 @@ std::pair<int, int> Game::TerrainInfo()
             }
         }
     }
+
+    
 }
 
 
@@ -670,6 +672,13 @@ void Game::Render()
 	m_displayChunk.RenderBatch(m_deviceResources);
 
     m_deviceResources->Present();
+}
+
+void Game::RecalcuateTerrainNormals()
+{
+    // recalculate normals (this is only done when the user lets go of the key when terrain editting
+	// this is very resource intensive to do every frame
+    m_displayChunk.CalculateTerrainNormals();	
 }
 
 // Helper method to clear the back buffers.

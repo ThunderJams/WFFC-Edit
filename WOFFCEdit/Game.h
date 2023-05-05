@@ -56,6 +56,8 @@ public:
 		blue = b;
 	}
 
+	void RecalcuateTerrainNormals();
+
 	// Rendering helpers
 	void Clear();
 
