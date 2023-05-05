@@ -290,8 +290,11 @@ void ToolMain::Tick(MSG *msg)
 		isObjectSpawned = true;
 		m_d3dRenderer.ObjectPlacement();
 	}
+	else if (terrainEdit && m_toolInputCommands.mouse_LB_Down) {
+		m_d3dRenderer.TerrainEdit();
+	}
 
-	if (!objectSpawning && (m_toolInputCommands.mouse_LB_Down || m_toolInputCommands.mouse_LB_Hold)) {
+	if (!objectSpawning && !terrainEdit && (m_toolInputCommands.mouse_LB_Down || m_toolInputCommands.mouse_LB_Hold)) {
 		// check if the object we are clicking on is the same as what is selected
 		if (0 == m_d3dRenderer.MousePicking(false) || 1 == m_d3dRenderer.MousePicking(false)  || 2 == m_d3dRenderer.MousePicking(false) || m_toolInputCommands.mouse_LB_Hold || m_d3dRenderer.GetSelectedAxis() != 'a') {
 			// calculate the difference in the mouse position transforms
@@ -471,4 +474,24 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 
 	
+}
+
+int ToolMain::GetToolMode()
+{
+	if (terrainEdit) {
+		return 2;
+	}
+	else if (objectSpawning) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+
+	
+}
+
+std::pair<int, int> ToolMain::GetTerrainIntersect()
+{
+	return m_d3dRenderer.TerrainInfo();
 }

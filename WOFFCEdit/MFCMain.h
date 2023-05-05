@@ -23,7 +23,7 @@ private:
 
 	CMyFrame * m_frame;	//handle to the frame where all our UI is
 	HWND m_toolHandle;	//Handle to the MFC window
-	ToolMain m_ToolSystem;	//Instance of Tool System that we interface to. 
+	ToolMain m_ToolSystem;	//Instance of Tool System that we interface to.
 	CRect WindowRECT;	//Window area rectangle. 
 	SelectDialogue m_ToolSelectDialogue;			//for modeless dialogue, declare it here
 
@@ -37,6 +37,11 @@ private:
 	afx_msg	void ToolBarButton1();
 	afx_msg	void ToolBarButton2();
 	afx_msg	void ToolBarButton3();
+	afx_msg	void ToolBarButton4();
+	afx_msg	void ToolBarButton5();
+	afx_msg	void ToolBarButtonRed();
+	afx_msg	void ToolBarButtonGreen();
+	afx_msg	void ToolBarButtonBlue();
 
 
 	DECLARE_MESSAGE_MAP()	// required macro for message map functionality  One per class

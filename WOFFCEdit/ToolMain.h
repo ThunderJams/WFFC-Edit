@@ -26,7 +26,34 @@ public: //methods
 
 	void	Tick(MSG *msg);
 	void	UpdateInput(MSG *msg);
-	void	SetObjectSpawning(bool b) { objectSpawning = b; };
+	void	SetObjectSpawning(bool b) { objectSpawning = b;
+		if (terrainEdit) {
+			terrainEdit = false;
+		}
+	};
+	
+	void	Wireframe(bool b) { 
+		m_d3dRenderer.Wireframe(b); 
+		localWireframe = b;
+	};
+	bool GetWireframe() { return localWireframe; };
+	
+	void	SetTerrainEdit(bool b) { 
+		terrainEdit = b;
+		if (objectSpawning) objectSpawning = false;
+	
+	}
+	bool GetTerrainEdit() { return terrainEdit; };
+
+	int GetToolMode();
+
+	std::pair<int, int> GetTerrainIntersect();
+
+	void UpdateColours(bool r, bool g, bool b) {
+		m_d3dRenderer.UpdateColours(r, g, b);
+	}
+
+	
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
@@ -54,6 +81,9 @@ private:	//variables
 	int prevY;
 	
 	bool objectSpawning   = false;
+	bool terrainEdit = false;
 	bool isObjectSpawned = false;
+
+	bool localWireframe = false;
 	
 };

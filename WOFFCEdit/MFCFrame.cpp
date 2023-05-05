@@ -33,6 +33,7 @@ void CMyFrame::OnUpdatePage(CCmdUI * pCmdUI)
 	pCmdUI->Enable();
 	CString strPage;
 	strPage.Format(_T("%d"), m_selectionID);
+
 	pCmdUI->SetText(strPage);
 }
 

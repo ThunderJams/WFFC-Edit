@@ -215,7 +215,35 @@ int Game::MousePicking(bool ignoreGizmo)
 	}
 
     
+    if (selectedID != -1 && ignoreGizmo) {
+        if (red) {
+            CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"database/data/red.dds", nullptr, &m_displayList[selectedID].m_texture_diffuse);
+     
+        }
+        if (green) {
+            CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"database/data/green.dds", nullptr, &m_displayList[selectedID].m_texture_diffuse);
 
+        }
+        if (blue) {
+            CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"database/data/blue.dds", nullptr, &m_displayList[selectedID].m_texture_diffuse);
+
+        }
+		
+        if (red || green || blue) {
+            //apply new texture to models effect
+            m_displayList[selectedID].m_model->UpdateEffects([&](IEffect* effect)
+                {
+                    auto lights = dynamic_cast<BasicEffect*>(effect);
+                    if (lights)
+                    {
+                        lights->SetTexture(m_displayList[selectedID].m_texture_diffuse);
+                    }
+                });
+            red = false;
+            green = false;
+            blue = false;
+        }
+    }
     
 
 	//if we got a hit.  return it.  
@@ -349,8 +377,6 @@ void Game::ObjectGeneration(Vector3 pos)
     HRESULT rs;
 
     //load model
-    //std::wstring modelwstr = StringToWCHART("database/data/placeholder.cmo");      
-    
     newDisplayObject.m_model = Model::CreateFromCMO(device, L"database/data/placeholder.cmo", *m_fxFactory, true);//convect string to Wchar
     CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"database/data/placeholder.dds", nullptr, &newDisplayObject.m_texture_diffuse);
 
@@ -386,6 +412,188 @@ void Game::ObjectGeneration(Vector3 pos)
 	
 }
 
+void Game::TerrainEdit()
+{
+    //intersection point and bool to check if we have an intersection
+    Vector3 IntersectionPoint;
+    bool intersection = false;
+
+    //setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain.
+    const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
+    const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
+
+    //Unproject the points on the near and far plane
+    const XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+    const XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+
+    //get the line cast from the mouse
+    const XMVECTOR lineCast = XMVector3Normalize(farPoint - nearPoint);
+
+    //loop through quads to check for line intersection
+    for (size_t i = 0; i < TERRAINRESOLUTION - 1; i++)
+    {
+        if (intersection)
+            break;
+        for (size_t j = 0; j < TERRAINRESOLUTION - 1; j++)
+        {
+            XMVECTOR v1 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j].position);
+            XMVECTOR v2 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j + 1].position);
+            XMVECTOR v3 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j + 1].position);
+            XMVECTOR v4 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j].position);
+
+            //get plane from vertices
+            XMVECTOR normal = XMVector3Normalize(XMVector3Cross(v2 - v1, v3 - v1));
+            float d = -XMVectorGetX(XMVector3Dot(normal, v1));
+            XMVECTOR plane = XMVectorSetW(normal, d);
+
+            //get intersection point
+            XMVECTOR intersects = XMPlaneIntersectLine(plane, nearPoint, farPoint);
+
+            if (!XMVector3Equal(intersects, XMVectorZero()))
+            {
+                //convert intersection point to vector3
+                Vector3 point;
+                XMStoreFloat3(&point, intersects);
+
+                // check if the point is inside the quad
+                if (point.x >= std::min(XMVectorGetX(v1), XMVectorGetX(v2)) && point.x <= std::max(XMVectorGetX(v1), XMVectorGetX(v2)) &&
+                    point.z >= std::min(XMVectorGetZ(v1), XMVectorGetZ(v4)) && point.z <= std::max(XMVectorGetZ(v1), XMVectorGetZ(v4)))
+                {
+                    //store point of intersection
+                    IntersectionPoint = point;
+                    intersection = true;
+                    break;
+                }
+            }
+
+        }
+    }
+
+    //if line did not intersect terrain, return
+    if (!intersection)
+        return;
+
+    //loop through vertices and check if they are within a certain radius of the intersection point
+    for (int i = 0; i < 128; i++)
+    {
+        for (int j = 0; j < 128; j++)
+        {
+            //get distance between vertex and intersection point (ignoring y axis)
+            const float distance = Vector3::Distance(Vector3(IntersectionPoint.x, 0, IntersectionPoint.z), Vector3(m_displayChunk.m_terrainGeometry[i][j].position.x, 0, m_displayChunk.m_terrainGeometry[i][j].position.z));
+            const int outerRadius = 25;
+            const int innerRadius = 15;
+            if (distance < outerRadius)
+            {
+                //if vertex is within radius, raise or lower it depending on direction, outer radius also factors in distance from intersection point
+                if (distance < innerRadius)
+                    m_displayChunk.m_terrainGeometry[i][j].position.y += 0.25f * m_InputCommands.terrainDirection;
+                else
+                    m_displayChunk.m_terrainGeometry[i][j].position.y += 0.25f * m_InputCommands.terrainDirection * (1 - ((distance - innerRadius) / 10.f));
+
+                //keep vertex within bounds of height map
+                if (m_displayChunk.m_terrainGeometry[i][j].position.y < 0)
+                    m_displayChunk.m_terrainGeometry[i][j].position.y = 0;
+                else if (m_displayChunk.m_terrainGeometry[i][j].position.y > 64)
+                    m_displayChunk.m_terrainGeometry[i][j].position.y = 64;
+
+                //recalculate normals
+                //m_displayChunk.CalculateTerrainNormal(i, j);
+                std::pair<int, int> point;
+
+            }
+        }
+    }
+
+    m_displayChunk.UpdateTerrain();
+}
+
+std::pair<int, int> Game::TerrainInfo()
+{
+    //intersection point and bool to check if we have an intersection
+    Vector3 IntersectionPoint;
+    bool intersection = false;
+
+    //setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain.
+    const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
+    const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
+
+    //Unproject the points on the near and far plane
+    const XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+    const XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+
+    //get the line cast from the mouse
+    const XMVECTOR lineCast = XMVector3Normalize(farPoint - nearPoint);
+
+    //loop through quads to check for line intersection
+    for (size_t i = 0; i < TERRAINRESOLUTION - 1; i++)
+    {
+        if (intersection)
+            break;
+        for (size_t j = 0; j < TERRAINRESOLUTION - 1; j++)
+        {
+            XMVECTOR v1 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j].position);
+            XMVECTOR v2 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j + 1].position);
+            XMVECTOR v3 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j + 1].position);
+            XMVECTOR v4 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j].position);
+
+            //get plane from vertices
+            XMVECTOR normal = XMVector3Normalize(XMVector3Cross(v2 - v1, v3 - v1));
+            float d = -XMVectorGetX(XMVector3Dot(normal, v1));
+            XMVECTOR plane = XMVectorSetW(normal, d);
+
+            //get intersection point
+            XMVECTOR intersects = XMPlaneIntersectLine(plane, nearPoint, farPoint);
+
+            if (!XMVector3Equal(intersects, XMVectorZero()))
+            {
+                //convert intersection point to vector3
+                Vector3 point;
+                XMStoreFloat3(&point, intersects);
+
+                // check if the point is inside the quad
+                if (point.x >= std::min(XMVectorGetX(v1), XMVectorGetX(v2)) && point.x <= std::max(XMVectorGetX(v1), XMVectorGetX(v2)) &&
+                    point.z >= std::min(XMVectorGetZ(v1), XMVectorGetZ(v4)) && point.z <= std::max(XMVectorGetZ(v1), XMVectorGetZ(v4)))
+                {
+                    //store point of intersection
+                    IntersectionPoint = point;
+                    intersection = true;
+                    break;
+                }
+            }
+
+        }
+    }
+
+    //if line did not intersect terrain, return
+    if (!intersection)
+        return std::pair<int, int>(99999,99999);
+
+    //loop through vertices and check if they are within a certain radius of the intersection point
+    for (int i = 0; i < 128; i++)
+    {
+        for (int j = 0; j < 128; j++)
+        {
+            //get distance between vertex and intersection point (ignoring y axis)
+            const float distance = Vector3::Distance(Vector3(IntersectionPoint.x, 0, IntersectionPoint.z), Vector3(m_displayChunk.m_terrainGeometry[i][j].position.x, 0, m_displayChunk.m_terrainGeometry[i][j].position.z));
+            const int outerRadius = 25;
+            const int innerRadius = 15;
+            if (distance < outerRadius)
+            {
+
+                //recalculate normals
+                //m_displayChunk.CalculateTerrainNormal(i, j);
+                std::pair<int, int> point;
+
+                //store points for undo/redo command
+                point.first = i;
+                point.second = j;
+				
+                return point;
+            }
+        }
+    }
+}
+
 
 
 
@@ -405,6 +613,8 @@ void Game::Render()
     m_deviceResources->PIXBeginEvent(L"Render");
     auto context = m_deviceResources->GetD3DDeviceContext();
 
+    
+
 	if (m_grid)
 	{
 		// Draw procedurally generated dynamic grid
@@ -418,6 +628,8 @@ void Game::Render()
 	std::wstring var = L"Cam X: " + std::to_wstring(camera.m_camPosition.x) + L"Cam Z: " + std::to_wstring(camera.m_camPosition.z);
 	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
 	m_sprites->End();
+
+    
 
 	//RENDER OBJECTS FROM SCENEGRAPH
 	int numRenderObjects = m_displayList.size();
@@ -434,7 +646,14 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+        if (i != 0 && i != 1 && i != 2) {
+            m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, wireframeMode);	//last variable in draw,  make TRUE for wireframe
+        }
+        else {
+            m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+        }
+		
+		
 
 		m_deviceResources->PIXEndEvent();
 	}
@@ -444,7 +663,8 @@ void Game::Render()
 	context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
 	context->OMSetDepthStencilState(m_states->DepthDefault(),0);
 	context->RSSetState(m_states->CullNone());
-//	context->RSSetState(m_states->Wireframe());		//uncomment for wireframe
+	
+	if (wireframeMode) context->RSSetState(m_states->Wireframe());		//uncomment for wireframe	
 
 	//Render the batch,  This is handled in the Display chunk becuase it has the potential to get complex
 	m_displayChunk.RenderBatch(m_deviceResources);

@@ -8,7 +8,13 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::MenuEditSelect)
 	ON_COMMAND(ID_BUTTON40001,	&MFCMain::ToolBarButton1)
 	ON_COMMAND(ID_BUTTON40005, &MFCMain::ToolBarButton2)
-	ON_COMMAND(ID_BUTTON40007, &MFCMain::ToolBarButton3)	
+	ON_COMMAND(ID_BUTTON40007, &MFCMain::ToolBarButton3)
+	ON_COMMAND(ID_BUTTON40009, &MFCMain::ToolBarButton4)
+	ON_COMMAND(ID_BUTTON40011, &MFCMain::ToolBarButton5)
+	ON_COMMAND(ID_BUTTON40012, &MFCMain::ToolBarButtonRed)
+	ON_COMMAND(ID_BUTTON40013, &MFCMain::ToolBarButtonGreen)
+	ON_COMMAND(ID_BUTTON40014, &MFCMain::ToolBarButtonBlue)
+	
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
 
@@ -73,10 +79,27 @@ int MFCMain::Run()
 		{	
 			int ID = m_ToolSystem.getCurrentSelectionID();
 			std::wstring statusString = L"Selected Object: " + std::to_wstring(ID);
+			std::wstring toolString = L" - Current Tool: " + std::to_wstring(ID);
+			if (m_ToolSystem.GetToolMode() == 0) {
+				toolString = L" | Tool in Use: Mouse Pick";
+			}
+			if (m_ToolSystem.GetToolMode() == 1) {
+				toolString = L" | Tool in Use: Place Object";
+			}
+			if (m_ToolSystem.GetToolMode() == 2) {
+				toolString = L" | Tool in Use: Edit Terrain";
+			}
+
+			std::wstring terrainInfoString = L" ";
+			if (m_ToolSystem.GetTerrainIntersect().first != 99999) terrainInfoString = L" | Terrain Point Co-ords: " + std::to_wstring(m_ToolSystem.GetTerrainIntersect().first) + L"," + std::to_wstring(m_ToolSystem.GetTerrainIntersect().second);
+			
+			
+
+			std::wstring statusStringFinal = statusString + toolString + terrainInfoString;
 			m_ToolSystem.Tick(&msg);
 
 			//send current object ID to status bar in The main frame
-			m_frame->m_wndStatusBar.SetPaneText(1, statusString.c_str(), 1);	
+			m_frame->m_wndStatusBar.SetPaneText(1, statusStringFinal.c_str(), 1);	
 		}
 	}
 
@@ -121,6 +144,41 @@ void MFCMain::ToolBarButton3()
 {
 
 	m_ToolSystem.SetObjectSpawning(true);
+}
+
+void MFCMain::ToolBarButton4()
+{
+
+	m_ToolSystem.Wireframe(!m_ToolSystem.GetWireframe());
+
+}
+
+void MFCMain::ToolBarButton5()
+{
+
+	m_ToolSystem.SetTerrainEdit(!m_ToolSystem.GetTerrainEdit());
+
+}
+
+void MFCMain::ToolBarButtonRed()
+{
+
+	m_ToolSystem.UpdateColours(true, false, false);
+
+}
+
+void MFCMain::ToolBarButtonGreen()
+{
+
+	m_ToolSystem.UpdateColours(false, true, false);
+
+}
+
+void MFCMain::ToolBarButtonBlue()
+{
+
+	m_ToolSystem.UpdateColours(false, false, true);
+
 }
 
 

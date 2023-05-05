@@ -45,6 +45,16 @@ public:
 	void WidgetGeneration(int id);
 	void ObjectPlacement();
 	void ObjectGeneration(DirectX::SimpleMath::Vector3 pos);
+	void TerrainEdit();
+	
+	void Wireframe(bool b) { wireframeMode = b; };
+	std::pair<int, int> TerrainInfo();
+	
+	void UpdateColours(bool r, bool g, bool b) {
+		red = r;
+		green = g;
+		blue = b;
+	}
 
 	// Rendering helpers
 	void Clear();
@@ -91,7 +101,14 @@ private:
 	bool erasing = false;
 	bool pasting = false;
 	bool cutting = false;
+	bool wireframeMode = false;
 	char selectedAxis = 'w';
+
+	bool red = false;
+	bool green = false;
+	bool blue = false;
+
+	std::vector<std::pair<int, int>> points;
 	//bool gizmoSelected = true;
 
 	//control variables
