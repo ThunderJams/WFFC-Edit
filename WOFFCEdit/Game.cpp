@@ -293,14 +293,18 @@ void Game::Cut(int id) {
 void Game::MoveObject(int moveX, int moveY, int id, char axis)
 {
     if (id != -1) {
-        
+
+        // If the selected axis is not one of x, y, or z, default to the passed in axis
         if (selectedAxis != 'x' && selectedAxis != 'y' && selectedAxis != 'z') selectedAxis = axis;
-        
+
+        // Get the proportion of the camera's right vector that corresponds to the x and z axes
         float xProportion = -XMVectorGetX(camera.m_camRight);
         float zProportion = -XMVectorGetZ(camera.m_camRight);
 
+        // Set the movement sensitivity for the object
         float moveSensitivity = 0.1;
 
+        // Move the object based on the selected axis
         if (selectedAxis == 'x') {
             m_displayList[id].m_position += Vector3(moveX * xProportion * moveSensitivity, 0, 0);
         }
@@ -311,7 +315,6 @@ void Game::MoveObject(int moveX, int moveY, int id, char axis)
             m_displayList[id].m_position += Vector3(0, 0, moveX * zProportion * moveSensitivity);
         }
         else {
-            
             m_displayList[id].m_position += Vector3(moveX * xProportion * moveSensitivity, moveY * moveSensitivity, moveX * zProportion * moveSensitivity);
         }
     }
@@ -414,64 +417,7 @@ void Game::ObjectGeneration(Vector3 pos)
 
 void Game::TerrainEdit()
 {
-    //intersection point and bool to check if we have an intersection
-    Vector3 IntersectionPoint;
-    bool intersection = false;
-
-    //setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain.
-    const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
-    const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
-
-    //Unproject the points on the near and far plane
-    const XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
-    const XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
-
-    //get the line cast from the mouse
-    const XMVECTOR lineCast = XMVector3Normalize(farPoint - nearPoint);
-
-    //loop through quads to check for line intersection
-    for (size_t i = 0; i < TERRAINRESOLUTION - 1; i++)
-    {
-        if (intersection)
-            break;
-        for (size_t j = 0; j < TERRAINRESOLUTION - 1; j++)
-        {
-            XMVECTOR v1 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j].position);
-            XMVECTOR v2 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j + 1].position);
-            XMVECTOR v3 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j + 1].position);
-            XMVECTOR v4 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j].position);
-
-            //get plane from vertices
-            XMVECTOR normal = XMVector3Normalize(XMVector3Cross(v2 - v1, v3 - v1));
-            float d = -XMVectorGetX(XMVector3Dot(normal, v1));
-            XMVECTOR plane = XMVectorSetW(normal, d);
-
-            //get intersection point
-            XMVECTOR intersects = XMPlaneIntersectLine(plane, nearPoint, farPoint);
-
-            if (!XMVector3Equal(intersects, XMVectorZero()))
-            {
-                //convert intersection point to vector3
-                Vector3 point;
-                XMStoreFloat3(&point, intersects);
-
-                // check if the point is inside the quad
-                if (point.x >= std::min(XMVectorGetX(v1), XMVectorGetX(v2)) && point.x <= std::max(XMVectorGetX(v1), XMVectorGetX(v2)) &&
-                    point.z >= std::min(XMVectorGetZ(v1), XMVectorGetZ(v4)) && point.z <= std::max(XMVectorGetZ(v1), XMVectorGetZ(v4)))
-                {
-                    //store point of intersection
-                    IntersectionPoint = point;
-                    intersection = true;
-                    break;
-                }
-            }
-
-        }
-    }
-
-    //if line did not intersect terrain, return
-    if (!intersection)
-        return;
+    Vector3 IntersectionPoint = TerrainInfo();
 
     //loop through vertices and check if they are within a certain radius of the intersection point
     for (int i = 0; i < 128; i++)
@@ -507,7 +453,7 @@ void Game::TerrainEdit()
     
 }
 
-std::pair<int, int> Game::TerrainInfo()
+Vector3 Game::TerrainInfo()
 {
     //intersection point and bool to check if we have an intersection
     Vector3 IntersectionPoint;
@@ -566,31 +512,9 @@ std::pair<int, int> Game::TerrainInfo()
 
     //if line did not intersect terrain, return
     if (!intersection)
-        return std::pair<int, int>(99999,99999);
-
-    //loop through vertices and check if they are within a certain radius of the intersection point
-    for (int i = 0; i < 128; i++)
-    {
-        for (int j = 0; j < 128; j++)
-        {
-            //get distance between vertex and intersection point (ignoring y axis)
-            const float distance = Vector3::Distance(Vector3(IntersectionPoint.x, 0, IntersectionPoint.z), Vector3(m_displayChunk.m_terrainGeometry[i][j].position.x, 0, m_displayChunk.m_terrainGeometry[i][j].position.z));
-            const int outerRadius = 25;
-            const int innerRadius = 15;
-            if (distance < outerRadius)
-            {
-
-                //recalculate normals
-                //m_displayChunk.CalculateTerrainNormal(i, j);
-                std::pair<int, int> point;
-
-                //store points for undo/redo command
-                point.first = i;
-                point.second = j;
-				
-                return point;
-            }
-        }
+        return Vector3(99999,99999,99999);
+    else {
+        return IntersectionPoint;
     }
 
     
@@ -679,6 +603,23 @@ void Game::RecalcuateTerrainNormals()
     // recalculate normals (this is only done when the user lets go of the key when terrain editting
 	// this is very resource intensive to do every frame
     m_displayChunk.CalculateTerrainNormals();	
+}
+
+void Game::ResetTexture(int id)
+{
+        CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"database/data/placeholder.dds", nullptr, &m_displayList[id].m_texture_diffuse);
+
+
+        //apply new texture to models effect
+        m_displayList[id].m_model->UpdateEffects([&](IEffect* effect)
+            {
+                auto lights = dynamic_cast<BasicEffect*>(effect);
+                if (lights)
+                {
+                    lights->SetTexture(m_displayList[id].m_texture_diffuse);
+                }
+            });
+    
 }
 
 // Helper method to clear the back buffers.

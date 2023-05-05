@@ -81,17 +81,17 @@ int MFCMain::Run()
 			std::wstring statusString = L"Selected Object: " + std::to_wstring(ID);
 			std::wstring toolString = L" - Current Tool: " + std::to_wstring(ID);
 			if (m_ToolSystem.GetToolMode() == 0) {
-				toolString = L" | Tool in Use: Mouse Pick";
+				toolString = L" | Tool: Mouse Pick";
 			}
 			if (m_ToolSystem.GetToolMode() == 1) {
-				toolString = L" | Tool in Use: Place Object";
+				toolString = L" | Tool: Place Object";
 			}
 			if (m_ToolSystem.GetToolMode() == 2) {
-				toolString = L" | Tool in Use: Edit Terrain";
+				toolString = L" | Tool: Edit Terrain";
 			}
 
 			std::wstring terrainInfoString = L" ";
-			if (m_ToolSystem.GetTerrainIntersect().first != 99999) terrainInfoString = L" | Terrain Point Co-ords: " + std::to_wstring(m_ToolSystem.GetTerrainIntersect().first) + L"," + std::to_wstring(m_ToolSystem.GetTerrainIntersect().second);
+			if (m_ToolSystem.GetTerrainIntersect().x != 99999) terrainInfoString = L" | Terrain Point Co-ords: " + std::to_wstring((int)m_ToolSystem.GetTerrainIntersect().x) + L", " + std::to_wstring((int)m_ToolSystem.GetTerrainIntersect().y) + L", " + std::to_wstring((int)m_ToolSystem.GetTerrainIntersect().z);
 			
 			
 

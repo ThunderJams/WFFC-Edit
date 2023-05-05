@@ -47,7 +47,7 @@ public: //methods
 
 	int GetToolMode();
 
-	std::pair<int, int> GetTerrainIntersect();
+	DirectX::SimpleMath::Vector3 GetTerrainIntersect();
 
 	void UpdateColours(bool r, bool g, bool b) {
 		m_d3dRenderer.UpdateColours(r, g, b);

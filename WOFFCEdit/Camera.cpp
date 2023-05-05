@@ -44,7 +44,7 @@ void Camera::Update(InputCommands inp)
 
 	
 
-	if (inp.mouse_RB_Down)
+	if (inp.mouse_RB_Down || inp.mouse_Mid_Down)
 	{
 		float deltaX = inp.mouse_X - m_PrevMouseX;
 		float deltaY = inp.mouse_Y - m_PrevMouseY;

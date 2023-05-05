@@ -377,6 +377,11 @@ void ToolMain::Tick(MSG *msg)
 
 	 }
 
+	 if (m_selectedObject != 1 && m_toolInputCommands.key_r) {
+		 m_d3dRenderer.ResetTexture(m_selectedObject);
+
+	 }
+
 
 	//has something changed
 		//update Scenegraph
@@ -444,7 +449,13 @@ void ToolMain::UpdateInput(MSG * msg)
 		if (terrainEdit) m_d3dRenderer.RecalcuateTerrainNormals();
 		break;
 
+	case WM_MBUTTONDOWN:	// checks if the middle mouse button is down, and updates input commands correctly
+		m_toolInputCommands.mouse_Mid_Down = true;
+		break;
 
+	case WM_MBUTTONUP:	// checks if the middle mouse button is up, and updates input commands correctly
+		m_toolInputCommands.mouse_Mid_Down = false;
+		break;
 
 	}
 
@@ -463,6 +474,7 @@ void ToolMain::UpdateInput(MSG * msg)
 	// copy paste
 	m_toolInputCommands.control = m_keyArray[17];
 	m_toolInputCommands.key_c = m_keyArray['C'];
+	m_toolInputCommands.key_r = m_keyArray['R'];
 
 	if (m_keyArray['V']) {
 		m_toolInputCommands.key_v = true;
@@ -500,7 +512,7 @@ int ToolMain::GetToolMode()
 	
 }
 
-std::pair<int, int> ToolMain::GetTerrainIntersect()
+Vector3 ToolMain::GetTerrainIntersect()
 {
 	return m_d3dRenderer.TerrainInfo();
 }

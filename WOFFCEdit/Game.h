@@ -48,7 +48,7 @@ public:
 	void TerrainEdit();
 	
 	void Wireframe(bool b) { wireframeMode = b; };
-	std::pair<int, int> TerrainInfo();
+	DirectX::SimpleMath::Vector3 TerrainInfo();
 	
 	void UpdateColours(bool r, bool g, bool b) {
 		red = r;
@@ -57,6 +57,8 @@ public:
 	}
 
 	void RecalcuateTerrainNormals();
+
+	void ResetTexture(int id);
 
 	// Rendering helpers
 	void Clear();
