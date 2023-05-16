@@ -188,6 +188,31 @@ void ToolMain::onActionLoad()
 
 void ToolMain::onActionSave()
 {
+
+	//clear the existing objects in the scenegraph
+	m_sceneGraph.clear();
+	std::vector<DisplayObject> m_displayList = m_d3dRenderer.GetDisplayObjects();
+
+	for (int i = 0; i < m_displayList.size(); i++)
+	{
+		SceneObject newSceneObject;
+		newSceneObject.ID = m_displayList.at(i).m_ID;
+		newSceneObject.chunk_ID = m_displayList.at(i).m_ID;
+		newSceneObject.model_path = m_displayList.at(i).modelPath;
+		newSceneObject.tex_diffuse_path = (std::string)m_displayList.at(i).texturePath;
+
+		newSceneObject.posX = m_displayList.at(i).m_position.x;
+		newSceneObject.posY = m_displayList.at(i).m_position.y;
+		newSceneObject.posZ = m_displayList.at(i).m_position.z;
+		newSceneObject.rotX = m_displayList.at(i).m_orientation.x;
+		newSceneObject.rotY = m_displayList.at(i).m_orientation.y;
+		newSceneObject.rotZ = m_displayList.at(i).m_orientation.z;
+		newSceneObject.scaX = m_displayList.at(i).m_scale.x;
+		newSceneObject.scaY = m_displayList.at(i).m_scale.y;
+		newSceneObject.scaZ = m_displayList.at(i).m_scale.z;
+
+		m_sceneGraph.push_back(newSceneObject);
+	}
 	//SQL
 	int rc;
 	char *sqlCommand;
@@ -355,10 +380,12 @@ void ToolMain::Tick(MSG *msg)
 		}
 	}
 
-	// copy/paste
+	// copy
 	 if (m_toolInputCommands.key_c && m_toolInputCommands.control) {
 		 m_d3dRenderer.Copy(m_selectedObject);
 	 }
+
+	 // cut
 	 else if (m_toolInputCommands.key_x && m_toolInputCommands.control) {
 		 if (m_selectedObject != -1) {
 			 m_d3dRenderer.Cut(m_selectedObject);
@@ -367,16 +394,19 @@ void ToolMain::Tick(MSG *msg)
 		 
 	 }
 
+	 // paste
 	 if (m_toolInputCommands.key_v && m_toolInputCommands.control) {
 		 m_d3dRenderer.Paste(m_selectedObject);
 
 	 }
 
+	 // generate the widget - updating it's position as long as an object is selected
 	 if (m_selectedObject != 1) {
 		 m_d3dRenderer.WidgetGeneration(m_selectedObject);
 
 	 }
 
+	 // reset the selected object's texture upon pressing the r key
 	 if (m_selectedObject != 1 && m_toolInputCommands.key_r) {
 		 m_d3dRenderer.ResetTexture(m_selectedObject);
 
