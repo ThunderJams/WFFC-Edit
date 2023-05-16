@@ -24,7 +24,7 @@ Game::Game()
 	//modes
 	m_grid = false;
 
-	
+    copiedObject.valid = false;
 
 }
 
@@ -260,7 +260,7 @@ void Game::Copy(int id)
 
 void Game::Paste(int id)
 {
-    if (!pasting) {
+    if (!pasting && copiedObject.valid) {
         // set the transform of the object to the camera position
         copiedObject.m_position = camera.m_camPosition + (camera.m_camLookDirection * 3);
 
@@ -607,6 +607,8 @@ void Game::RecalcuateTerrainNormals()
 
 void Game::ResetTexture(int id)
 {
+    if (id != -1) {
+
         CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"database/data/placeholder.dds", nullptr, &m_displayList[id].m_texture_diffuse);
 
 
@@ -619,7 +621,7 @@ void Game::ResetTexture(int id)
                     lights->SetTexture(m_displayList[id].m_texture_diffuse);
                 }
             });
-    
+    }
 }
 
 // Helper method to clear the back buffers.
