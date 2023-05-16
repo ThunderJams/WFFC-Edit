@@ -46,7 +46,6 @@ public:
 	void ObjectPlacement();
 	void ObjectGeneration(DirectX::SimpleMath::Vector3 pos);
 	void TerrainEdit();
-	std::vector<DisplayObject> GetDisplayObjects() { return m_displayList; };
 	
 	void Wireframe(bool b) { wireframeMode = b; };
 	DirectX::SimpleMath::Vector3 TerrainInfo();

@@ -141,13 +141,10 @@ void DisplayChunk::LoadHeightMap(std::shared_ptr<DX::DeviceResources>  DevResour
 
 void DisplayChunk::SaveHeightMap()
 {
-    for (size_t i = 0; i < TERRAINRESOLUTION; i++)
+/*	for (size_t i = 0; i < TERRAINRESOLUTION*TERRAINRESOLUTION; i++)
 	{
-		for (size_t j = 0; j < TERRAINRESOLUTION; j++)
-		{
-			m_heightMap[(TERRAINRESOLUTION * i) + j] = (float)(m_terrainGeometry[i][j].position.y / m_terrainHeightScale);
-		}
-	}
+		m_heightMap[i] = 0;
+	}*/
 
 	FILE *pFile = NULL;
 

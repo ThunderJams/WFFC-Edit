@@ -25,8 +25,7 @@ Game::Game()
 	m_grid = false;
 
 	
-    copiedObject = DisplayObject();
-    copiedObject.valid = false;
+
 }
 
 Game::~Game()
@@ -261,7 +260,7 @@ void Game::Copy(int id)
 
 void Game::Paste(int id)
 {
-    if (!pasting && copiedObject.valid) {
+    if (!pasting) {
         // set the transform of the object to the camera position
         copiedObject.m_position = camera.m_camPosition + (camera.m_camLookDirection * 3);
 
@@ -608,9 +607,6 @@ void Game::RecalcuateTerrainNormals()
 
 void Game::ResetTexture(int id)
 {
-
-    if (id != -1) {
-
         CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"database/data/placeholder.dds", nullptr, &m_displayList[id].m_texture_diffuse);
 
 
@@ -623,7 +619,7 @@ void Game::ResetTexture(int id)
                     lights->SetTexture(m_displayList[id].m_texture_diffuse);
                 }
             });
-    }
+    
 }
 
 // Helper method to clear the back buffers.
@@ -748,23 +744,27 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 
         if (i == 0) {
             //load model - the first model in the scene is the gizmo
-            newDisplayObject.modelPath = "forward.cmo";
-            
-            
+            newDisplayObject.m_model = Model::CreateFromCMO(device, L"forward.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+
+            //Load Texture
+            //rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
 
         }
         else if (i == 1) {
             //load model - the first model in the scene is the gizmo
-            newDisplayObject.modelPath = "right.cmo";
+            newDisplayObject.m_model = Model::CreateFromCMO(device, L"right.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
 
+            //Load Texture
+            //rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
         }
         else if (i == 2) {
             //load model - the first model in the scene is the gizmo
-            newDisplayObject.modelPath = "up.cmo";
+            newDisplayObject.m_model = Model::CreateFromCMO(device, L"up.cmo", *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+
+            //Load Texture
+            //rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
         }
 
-        std::wstring modelwstr = StringToWCHART(newDisplayObject.modelPath);
-        newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
         rs = CreateDDSTextureFromFile(device, L"gizmo.dds", nullptr, &newDisplayObject.m_texture_diffuse);
 
         //if texture fails.  load error default
@@ -838,13 +838,11 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
             //load model
             std::wstring modelwstr = StringToWCHART(SceneGraph->at(i).model_path);							//convect string to Wchar
             newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
-            newDisplayObject.modelPath = SceneGraph->at(i).model_path;
 
             //Load Texture
             std::wstring texturewstr = StringToWCHART(SceneGraph->at(i).tex_diffuse_path);								//convect string to Wchar
             HRESULT rs;
             rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
-            newDisplayObject.texturePath = SceneGraph->at(i).tex_diffuse_path;
         }
 
 		//if texture fails.  load error default
